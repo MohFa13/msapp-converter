@@ -42,7 +42,45 @@ This guide explains how to import the Canvas App Template into your Power Platfo
 - ✅ Works across environments
 - ✅ Preserves app metadata
 
-## Method 2: Import Canvas App Directly
+## Method 2: Import Unmanaged Solution
+
+**Best for**: Solution-aware deployments, ALM scenarios, multi-environment rollouts
+
+### Steps:
+
+1. **Download the Package**
+   - File: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+2. **Navigate to Power Apps**
+   - Go to [https://make.powerapps.com](https://make.powerapps.com)
+   - Select your target environment
+
+3. **Open Solutions**
+   - Click **Solutions** in the left navigation
+
+4. **Import Solution**
+   - Click **Import solution** at the top
+   - Click **Browse** and select `CanvasAppTemplateSolution_1_0_0_0.zip`
+   - Click **Next** and follow the wizard
+
+5. **Review and Import**
+   - Confirm the information:
+     - **Name**: Canvas App Template
+     - **Version**: 1.0.0.0
+     - **Publisher**: Default Publisher
+   - Click **Import** and wait for completion
+
+6. **Verify**
+   - After import, open the solution to confirm the canvas app exists
+   - The app will also appear under **Apps** for editing
+
+### Benefits:
+- ✅ Solution format with `solution.xml`, `customizations.xml`, `[Content_Types].xml`
+- ✅ Canvas app registered as root component (type 300)
+- ✅ Compatible with pipelines and ALM tooling
+- ✅ Enables exporting and re-importing as part of larger solutions
+
+## Method 3: Import Canvas App Directly
 
 **Best for**: Quick testing, development, proof-of-concept
 

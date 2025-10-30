@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.0.0" SolutionPackageVersion="9.2" languagecode="1033" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>CanvasAppTemplate</UniqueName>
+    <LocalizedNames>
+      <LocalizedName languagecode="1033" description="Canvas App Template" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description languagecode="1033" description="Canvas app template created from starter screen" />
+    </Descriptions>
+    <Version>1.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>DefaultPublisher</UniqueName>
+      <LocalizedNames>
+        <LocalizedName languagecode="1033" description="Default Publisher" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description languagecode="1033" description="Default solution publisher" />
+      </Descriptions>
+      <CustomizationPrefix>new</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <EMailAddress>noreply@powerapps.com</EMailAddress>
+      <SupportingWebsiteUrl>https://powerapps.microsoft.com</SupportingWebsiteUrl>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="300" schemaName="new_canvasapp_6fb7a" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+    <UniqueSolutionId>{6FB7A367-A13C-45FF-A7B6-3ED964E3087C}</UniqueSolutionId>
+  </SolutionManifest>
+</ImportExportXml>

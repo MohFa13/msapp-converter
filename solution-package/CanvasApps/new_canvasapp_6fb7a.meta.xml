@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <UniqueName>new_canvasapp_6fb7a</UniqueName>
+  <Name>App</Name>
+  <DisplayName>App</DisplayName>
+  <Description />
+  <AppVersion>2024-10-30T13:30:00Z</AppVersion>
+  <Status>Ready</Status>
+  <MinClientVersion>1.331</MinClientVersion>
+  <CreatedByClientVersion>3.24052.0</CreatedByClientVersion>
+  <AppRapVersion>3.24052.0</AppRapVersion>
+  <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"false","supportsLandscape":"true","primaryFormFactor":"Tablet","publisherVersion":"3.24052.0","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
+  <EmbeddedApp />
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+</CanvasApp>

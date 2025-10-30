@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities />
+  <Roles />
+  <Workflows />
+  <FieldSecurityProfiles />
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <SolutionPluginAssemblies />
+  <EntityDataProviders />
+  <Languages>
+    <Language>1033</Language>
+  </Languages>
+  <CanvasApps>
+    <CanvasApp CanvasAppName="App" CanvasAppUniqueName="new_canvasapp_6fb7a" DisplayName="App" Description="" CommitMessage="" BackgroundColor="RGBA(0,176,240,1)" ConnectionReferencesJson="[]" AuthorizationReferencesJson="[]" DataverseSolutionsJson="[]" AppVersion="2024-10-30T13:30:00Z" MinClientVersion="1.331" />
+  </CanvasApps>
+</ImportExportXml>

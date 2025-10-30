@@ -4,7 +4,7 @@ This repository provides a Power Apps Canvas App Template in multiple formats fo
 
 ## Available Packages
 
-### 1. Import Package (Production-Ready)
+### 1. Import Package (App-level, production-ready)
 **File**: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
 
 This is a Power Platform import package that includes:
@@ -14,14 +14,21 @@ This is a Power Platform import package that includes:
 
 **Import via**: Power Apps Portal → Apps → Import canvas app OR Import → Import package
 
-### 2. Canvas App Package (Quick Import)
+### 2. Unmanaged Solution Package (Full ALM)
+**File**: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+Standard unmanaged solution containing the canvas app as a root component.
+
+**Import via**: Power Apps Portal → Solutions → Import solution
+
+### 3. Canvas App Package (Quick Import)
 **File**: `App.msapp` (7.6 KB)
 
 Standalone canvas app package for quick testing and development.
 
 **Import via**: Power Apps Portal → Apps → Import canvas app
 
-### 3. Source Files (Development)
+### 4. Source Files (Development)
 The complete unpacked source structure including:
 - YAML screen definitions (`Src/`)
 - Metadata files (`CanvasManifest.json`, `Header.json`, etc.)
@@ -32,15 +39,15 @@ The complete unpacked source structure including:
 
 ## Package Comparison
 
-| Feature | Import Package (.zip) | Canvas App (.msapp) | Source Files |
-|---------|----------------------|---------------------|--------------|
-| File Size | 7.1 KB | 7.6 KB | ~15 KB |
-| Import Method | Import package | Import canvas app | pac canvas pack |
-| Versioning | ✅ Yes | ❌ No | ✅ Yes (when packed) |
-| Package Metadata | ✅ Full | ⚠️ Basic | ✅ Full |
-| Environment Transfer | ✅ Easy | ✅ Easy | ✅ Easy |
-| Dependencies Included | ✅ Yes | ❌ No | ✅ Yes |
-| Best For | Production | Quick Test | Development |
+| Feature | Import Package (.zip) | Unmanaged Solution (.zip) | Canvas App (.msapp) | Source Files |
+|---------|----------------------|---------------------------|---------------------|--------------|
+| File Size | 7.1 KB | 8.8 KB | 7.6 KB | ~15 KB |
+| Import Method | Apps → Import canvas app | Solutions → Import solution | Apps → Import canvas app | `pac canvas pack` |
+| Includes Manifest/Metadata | ✅ Yes (`manifest.xml`) | ✅ Yes (`solution.xml`, `customizations.xml`) | ⚠️ Basic | ✅ Full |
+| Canvas App Root Component | ✅ App-level | ✅ Solution component (type 300) | ✅ Standalone | ✅ Generated when packed |
+| ALM / Pipelines | ⚠️ Limited | ✅ Full | ❌ Manual | ✅ Full |
+| Dependencies Included | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
+| Best For | Production deployments | Enterprise ALM | Quick tests | Development customization |
 
 ## What's Included in the App?
 
@@ -98,6 +105,13 @@ Repository Root
 │   ├── Assets/                         # Static assets
 │   └── DataSources/                    # Data source definitions
 │
+├── solution-package/                   # Unmanaged solution source
+│   ├── [Content_Types].xml
+│   ├── customizations.xml
+│   ├── solution.xml
+│   └── CanvasApps/
+│       ├── new_canvasapp_6fb7a.msapp
+│       └── new_canvasapp_6fb7a.meta.xml
 └── package/                            # Import package source
     ├── manifest.xml                    # Package manifest
     └── App.msapp                       # Canvas app
@@ -106,9 +120,11 @@ Repository Root
 ## Quick Start
 
 ### For End Users (Just want to use the app)
-1. Download `CanvasAppTemplate_1_0_0_0.zip`
-2. Import it as a solution in Power Apps
-3. Open and customize the app
+1. Decide which package you need:
+   - `CanvasAppTemplateSolution_1_0_0_0.zip` for solution-aware import (recommended for ALM)
+   - `CanvasAppTemplate_1_0_0_0.zip` for direct app import
+2. Import the package in Power Apps using the appropriate menu (Solutions → Import solution or Apps → Import canvas app)
+3. Open and customize the app once the import completes
 
 ### For Developers (Want to modify and rebuild)
 1. Clone the repository

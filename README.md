@@ -4,7 +4,7 @@ This folder contains your unpacked PowerApps source files in the proper structur
 
 ## Quick Start
 
-**Ready to import?** Download `CanvasAppTemplate_1_0_0_0.zip` and import it as a solution in Power Platform. 
+**Ready to import?** Choose one of the prebuilt packages (`CanvasAppTemplate_1_0_0_0.zip` for app import, `CanvasAppTemplateSolution_1_0_0_0.zip` for solution import) and follow the instructions below.
 
 📖 **[Detailed Import Instructions](IMPORT_GUIDE.md)** | 📦 **[Package Summary](PACKAGE_SUMMARY.md)**
 
@@ -53,7 +53,7 @@ pac canvas pack --sources . --msapp MyApp.msapp
 
 ### Prebuilt Packages
 
-This repository includes two ready-to-use packages:
+This repository includes three ready-to-use packages:
 
 #### Option 1: Import as Package (Recommended)
 **File**: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
@@ -72,7 +72,23 @@ Benefits:
 - Works across environments
 - Best for production deployment
 
-#### Option 2: Import as Canvas App (Quick Import)
+#### Option 2: Import as Solution (Full ALM)
+**File**: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+Use this unmanaged solution if you prefer solution-aware deployment:
+
+1. Navigate to [Power Apps](https://make.powerapps.com)
+2. Select **Solutions** in the left navigation
+3. Click **Import solution**
+4. Select `CanvasAppTemplateSolution_1_0_0_0.zip`
+5. Follow the wizard to complete the import
+
+Benefits:
+- Includes `solution.xml`, `customizations.xml`, and `[Content_Types].xml`
+- Canvas app registered as root component (type 300)
+- Compatible with standard ALM tooling
+
+#### Option 3: Import as Canvas App (Quick Import)
 **File**: `App.msapp`
 
 For quick testing or development, you can import just the canvas app:
@@ -152,6 +168,7 @@ This repository now includes all required files for Power Platform CLI packaging
 - `validate-structure.ps1` and `validate-structure.sh` - Validation scripts to verify structure
 - `App.msapp` - Prebuilt canvas app package (7.6 KB)
 - `CanvasAppTemplate_1_0_0_0.zip` - Import package (7.1 KB)
+- `CanvasAppTemplateSolution_1_0_0_0.zip` - Unmanaged solution package (8.8 KB)
 
 The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
 
@@ -161,6 +178,18 @@ The `CanvasAppTemplate_1_0_0_0.zip` file contains:
 CanvasAppTemplate_1_0_0_0.zip
 ├── manifest.xml                 # Package manifest with metadata
 └── App.msapp                    # The canvas app
+```
+
+### Solution Package Structure
+The `CanvasAppTemplateSolution_1_0_0_0.zip` file contains:
+```
+CanvasAppTemplateSolution_1_0_0_0.zip
+├── [Content_Types].xml
+├── customizations.xml
+├── solution.xml
+└── CanvasApps/
+    ├── new_canvasapp_6fb7a.msapp
+    └── new_canvasapp_6fb7a.meta.xml
 ```
 
 ## Known Issues with pac canvas pack
