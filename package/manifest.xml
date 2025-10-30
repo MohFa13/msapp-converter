@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <Metadata>
+    <SchemaVersion>2.0</SchemaVersion>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <PackageUniqueName>CanvasAppTemplate</PackageUniqueName>
+    <Publisher>
+      <Name>Default</Name>
+      <UniqueName>default</UniqueName>
+    </Publisher>
+    <SolutionUniqueName>CanvasAppTemplate</SolutionUniqueName>
+    <LocalizedNames>
+      <LocalizedName languagecode="1033" description="Canvas App Template" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description languagecode="1033" description="Canvas app template created from starter screen" />
+    </Descriptions>
+  </Metadata>
+  <Content>
+    <CanvasApp Name="App" id="6fb7a367-a13c-45ff-a7b6-3ed964e3087c" SrcFile="App.msapp">
+      <LocalizedNames>
+        <LocalizedName languagecode="1033" description="App" />
+      </LocalizedNames>
+    </CanvasApp>
+  </Content>
+</Manifest>

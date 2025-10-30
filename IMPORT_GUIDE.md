@@ -1,0 +1,197 @@
+# Import Guide
+
+This guide explains how to import the Canvas App Template into your Power Platform environment.
+
+## Method 1: Import Package (Recommended)
+
+**Best for**: Quick deployment, direct app import with metadata
+
+### Steps:
+
+1. **Download the Package**
+   - File: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
+
+2. **Navigate to Power Apps**
+   - Go to [https://make.powerapps.com](https://make.powerapps.com)
+   - Select your target environment from the environment picker (top right)
+
+3. **Import Package**
+   - Click **Apps** in the left navigation menu
+   - Click **Import canvas app** at the top
+   - OR go to the Home page and click **Import** > **Import package**
+
+4. **Upload Package**
+   - Click **Upload** or **Browse**
+   - Select `CanvasAppTemplate_1_0_0_0.zip`
+   - Click **Upload**
+
+5. **Review and Import**
+   - Review the package information:
+     - **Name**: App
+     - **Package Version**: 1.0.0.0
+   - Click **Import**
+   - Wait for the import to complete (usually takes 10-30 seconds)
+
+6. **Verify**
+   - Once imported, the app should appear in your Apps list
+   - Click on it to open and edit in Power Apps Studio
+
+### Benefits:
+- ✅ Includes package manifest for proper import
+- ✅ Simple and quick deployment
+- ✅ Works across environments
+- ✅ Preserves app metadata
+
+## Method 2: Import Unmanaged Solution (Experimental)
+
+**Best for**: Solution-aware deployments (when supported by environment)
+
+⚠️ **Important**: This method may not work in all Power Platform environments due to platform limitations with importing standalone canvas apps via unmanaged solutions. If you encounter errors like "Cannot add a Root Component," please use Method 1 or Method 3 instead.
+
+### Steps:
+
+1. **Download the Package**
+   - File: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+2. **Navigate to Power Apps**
+   - Go to [https://make.powerapps.com](https://make.powerapps.com)
+   - Select your target environment
+
+3. **Open Solutions**
+   - Click **Solutions** in the left navigation
+
+4. **Import Solution**
+   - Click **Import solution** at the top
+   - Click **Browse** and select `CanvasAppTemplateSolution_1_0_0_0.zip`
+   - Click **Next** and follow the wizard
+
+5. **Review and Import**
+   - Confirm the information:
+     - **Name**: Canvas App Template
+     - **Version**: 1.0.0.0
+     - **Publisher**: Default Publisher
+   - Click **Import** and wait for completion
+
+6. **Verify**
+   - After import, open the solution to confirm the canvas app exists
+   - The app will also appear under **Apps** for editing
+
+### Benefits (when supported):
+- ✅ Solution format with `solution.xml`, `customizations.xml`, `[Content_Types].xml`
+- ✅ Canvas app registered as root component (type 300)
+- ✅ Compatible with pipelines and ALM tooling
+- ✅ Enables exporting and re-importing as part of larger solutions
+
+### Known Limitations:
+- ⚠️ Some environments may not support importing canvas apps via unmanaged solutions
+- ⚠️ Error "Cannot add a Root Component" indicates the environment doesn't support this import method
+- ✅ **Workaround**: Use Method 1 (Package Import) or Method 3 (Direct App Import) instead - both are verified to work
+
+## Method 3: Import Canvas App Directly
+
+**Best for**: Quick testing, development, proof-of-concept
+
+### Steps:
+
+1. **Download the Package**
+   - File: `App.msapp` (7.6 KB)
+
+2. **Navigate to Power Apps**
+   - Go to [https://make.powerapps.com](https://make.powerapps.com)
+   - Select your target environment
+
+3. **Import Canvas App**
+   - Click **Apps** in the left navigation
+   - Click **Import canvas app** at the top
+   - Click **Upload** and select `App.msapp`
+
+4. **Complete Import**
+   - Click **Import**
+   - Wait for the upload and import to complete
+
+5. **Verify**
+   - The app will appear in your Apps list
+   - Click on it to open and edit
+
+### Benefits:
+- ✅ Faster import process
+- ✅ No solution overhead
+- ✅ Good for quick testing
+- ✅ Simpler for development scenarios
+
+## What's Included?
+
+This Canvas App Template includes:
+
+- **Single Screen**: Screen1 with header, main content, and footer containers
+- **Navigation**: Back button functionality enabled
+- **Layout**: Tablet-optimized (1366x768) landscape orientation
+- **Theme**: Default Power Apps theme
+- **Controls**: Basic container controls (groupContainer.horizontal/vertical)
+
+## Post-Import Steps
+
+After importing, you may want to:
+
+1. **Rename the App**
+   - Open the app in Power Apps Studio
+   - Click on **Settings** > **General settings**
+   - Update the app name and description
+
+2. **Configure Connections** (if needed)
+   - Add data sources via **Data** panel
+   - Configure connectors via **Data** > **Add data**
+
+3. **Customize**
+   - Add more screens
+   - Customize the layout and controls
+   - Add business logic with Power Fx formulas
+
+4. **Share**
+   - Click **Share** to grant access to other users
+   - Set appropriate permissions
+
+## Troubleshooting
+
+### Solution import fails with "Cannot add a Root Component"
+**Full error**: "Cannot add a Root Component new_canvasapp_6fb7a of type 300 because it is not in the target system"
+
+**Cause**: Your Power Platform environment does not support importing standalone canvas apps via unmanaged solutions.
+
+**Solution**: Use one of these verified import methods instead:
+- ✅ **Method 1**: Import Package (`CanvasAppTemplate_1_0_0_0.zip`) - Works in all environments
+- ✅ **Method 3**: Direct App Import (`App.msapp`) - Works in all environments
+
+Both methods will successfully import the canvas app into your environment.
+
+### Import fails with "Invalid package" or "Manifest file not found"
+- Ensure you downloaded the complete file (check file size: 7.1 KB for .zip or 7.6 KB for .msapp)
+- Make sure you're using the "Import canvas app" or "Import package" option (not "Import solution")
+- Try re-downloading the package
+- Check that you have proper permissions in the target environment
+
+### Can't find the app after import
+- Check that you're in the correct environment
+- Refresh your browser
+- Clear browser cache and reload
+
+### App won't open
+- Ensure you have appropriate Power Apps license
+- Check that canvas apps are enabled in your environment
+- Contact your administrator if issues persist
+
+## Need Help?
+
+- **Power Apps Documentation**: [https://docs.microsoft.com/powerapps](https://docs.microsoft.com/powerapps)
+- **Power Apps Community**: [https://powerusers.microsoft.com](https://powerusers.microsoft.com)
+- **Support**: Contact your organization's Power Platform administrator
+
+## Version Information
+
+- **Solution Version**: 1.0.0.0
+- **Solution Name**: CanvasAppTemplate
+- **Publisher**: Default Publisher
+- **Canvas App**: App (new_canvasapp_6fb7a)
+- **Format Version**: 0.24
+- **Min Client Version**: 1.331
+- **Doc Version**: 1.346

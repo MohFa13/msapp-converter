@@ -2,16 +2,32 @@
 
 This folder contains your unpacked PowerApps source files in the proper structure for Power Platform CLI.
 
+## Quick Start
+
+**Ready to import?** Use `CanvasAppTemplate_1_0_0_0.zip` (recommended) or `App.msapp` for reliable import. Follow the instructions below.
+
+📖 **[Detailed Import Instructions](IMPORT_GUIDE.md)** | 📦 **[Package Summary](PACKAGE_SUMMARY.md)**
+
 ## Directory Structure
 ```
-PowerApps_CLI_Ready/
+project/
 ├── Src/                    # Screen and control definitions (.pa.yaml, .fx.yaml)
+│   ├── App.fx_*.yaml       # App-level PowerFx formulas
+│   ├── App.pa_*.yaml       # App properties
+│   ├── Screen1.fx.yaml     # Screen1 PowerFx formulas
+│   ├── Screen1.pa.yaml     # Screen1 properties
+│   └── _EditorState.pa_*.yaml # Editor state metadata
 ├── DataSources/            # Dataverse connections and data sources
-├── CanvasManifest.json     # App manifest
-├── Entropy.json            # Editor metadata
-├── checksum.json           # File checksums
+├── Assets/                 # Static assets and resources
+├── CanvasManifest.json     # App manifest with screen order
+├── Header.json             # App header metadata (required)
+├── Entropy.json            # Editor metadata and control IDs
+├── checksum.json           # File checksums (required)
+├── Resources.json          # Resource definitions (required)
 ├── Connections.json        # Connection references
-└── Other metadata files
+├── ComponentReferences.json # Component references
+├── ControlTemplates.json   # Control template definitions
+└── .gitignore              # Git ignore rules (updated to track required files)
 ```
 
 ## How to Use
@@ -28,12 +44,96 @@ winget install Microsoft.PowerPlatformCLI
 
 ### Pack to .msapp
 ```bash
-# Navigate to parent directory
-cd /path/to/
+# Navigate to the project directory
+cd /path/to/project
 
 # Pack the source into .msapp
-pac canvas pack --sources PowerApps_CLI_Ready --msapp MyApp.msapp
+pac canvas pack --sources . --msapp MyApp.msapp
 ```
+
+### Prebuilt Packages
+
+This repository includes three ready-to-use packages:
+
+#### Option 1: Import as Package (Recommended)
+**File**: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
+
+This is a Power Platform import package that can be imported into any environment:
+
+1. Navigate to [Power Apps](https://make.powerapps.com)
+2. Select **Apps** from the left navigation
+3. Click **Import canvas app** at the top
+4. Click **Upload** and select `CanvasAppTemplate_1_0_0_0.zip`
+5. Click **Import** and wait for completion
+
+Benefits:
+- Includes package manifest with metadata
+- Simple import process
+- Works across environments
+- Best for production deployment
+
+#### Option 2: Import as Solution (Experimental)
+**File**: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+⚠️ **Note**: Canvas app solution import may not work in all environments due to platform limitations. If you encounter "Cannot add a Root Component" errors, please use Option 1 or Option 3 instead.
+
+For environments that support it:
+
+1. Navigate to [Power Apps](https://make.powerapps.com)
+2. Select **Solutions** in the left navigation
+3. Click **Import solution**
+4. Select `CanvasAppTemplateSolution_1_0_0_0.zip`
+5. Follow the wizard to complete the import
+
+Benefits (when supported):
+- Includes `solution.xml`, `customizations.xml`, and `[Content_Types].xml`
+- Canvas app registered as root component (type 300)
+- Compatible with standard ALM tooling
+
+**Known Limitations**:
+- Some Power Platform environments may not support importing standalone canvas apps via unmanaged solutions
+- If import fails, the package import (Option 1) or direct app import (Option 3) will work reliably
+
+#### Option 3: Import as Canvas App (Quick Import)
+**File**: `App.msapp`
+
+For quick testing or development, you can import just the canvas app:
+
+1. Navigate to [Power Apps](https://make.powerapps.com)
+2. Select **Apps** > **Import canvas app**
+3. Upload the `App.msapp` file
+4. Click **Import**
+
+Benefits:
+- Faster import process
+- Suitable for development/testing
+- Standalone app without solution wrapper
+
+### Packaging Command (Advanced)
+If you need to regenerate the package from sources:
+
+**Step 1: Validate Structure**
+```bash
+# On Windows (PowerShell)
+.\validate-structure.ps1
+
+# On Linux/Mac
+./validate-structure.sh
+```
+
+**Step 2: Pack the App**
+```bash
+pac canvas pack --sources . --msapp NewApp.msapp
+```
+
+**Troubleshooting PA3002 Error:**
+If you encounter "Can't find CanvasManifest.json file" error:
+- Run the validation script to verify all files are present
+- Ensure you're running the command from the repository root directory
+- Verify `CanvasManifest.json` exists in the directory (use `dir` or `ls`)
+- Check that your Power Platform CLI is v1.50.1 or later
+- On Windows, ensure the path doesn't contain special characters
+- **Recommended**: Use the prebuilt `App.msapp` file instead of repacking
 
 ### Unpack .msapp (for reference)
 ```bash
@@ -62,6 +162,45 @@ pac canvas publish --path MyApp.msapp
 - Editing YAML directly is advanced - use PowerApps Studio when possible
 - Always backup your .msapp before making manual edits
 - Test thoroughly after packing custom edits
+
+## Required File Structure
+
+This repository now includes all required files for Power Platform CLI packaging:
+- `Header.json` - App header metadata (previously ignored by .gitignore)
+- `checksum.json` - File integrity checksums (previously ignored by .gitignore)
+- `Resources.json` - Resource definitions
+- `Screen1.fx.yaml` and `Screen1.pa.yaml` - Screen definitions matching CanvasManifest.json
+- `Assets/` and `DataSources/` directories with placeholder files
+- `validate-structure.ps1` and `validate-structure.sh` - Validation scripts to verify structure
+- `App.msapp` - Prebuilt canvas app package (7.6 KB)
+- `CanvasAppTemplate_1_0_0_0.zip` - Import package (7.1 KB)
+- `CanvasAppTemplateSolution_1_0_0_0.zip` - Unmanaged solution package (8.8 KB)
+
+The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
+
+### Import Package Structure
+The `CanvasAppTemplate_1_0_0_0.zip` file contains:
+```
+CanvasAppTemplate_1_0_0_0.zip
+├── manifest.xml                 # Package manifest with metadata
+└── App.msapp                    # The canvas app
+```
+
+### Solution Package Structure
+The `CanvasAppTemplateSolution_1_0_0_0.zip` file contains:
+```
+CanvasAppTemplateSolution_1_0_0_0.zip
+├── [Content_Types].xml
+├── customizations.xml
+├── solution.xml
+└── CanvasApps/
+    ├── new_canvasapp_6fb7a.msapp
+    └── new_canvasapp_6fb7a.meta.xml
+```
+
+## Known Issues with pac canvas pack
+
+Some users may encounter PA3002 errors when running `pac canvas pack` even with a valid structure. This appears to be an intermittent issue with certain CLI versions or environments. **The recommended approach is to use the prebuilt `App.msapp` file** included in this repository, which was generated from the same source files and is fully functional for importing into Power Apps.
 
 ## Reference
 
