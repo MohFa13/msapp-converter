@@ -45,13 +45,16 @@ cd /path/to/project
 pac canvas pack --sources . --msapp MyApp.msapp
 ```
 
+### Prebuilt Package
+A ready-to-import `App.msapp` generated from the current sources is included at the repository root.
+
 ### Packaging Command
-Use the following command to pack the source into .msapp:
+Use the following command to regenerate the package from the sources:
 ```bash
 pac canvas pack --sources . --msapp App.msapp
 ```
 
-**Note**: If you encounter a PA3002 error about CanvasManifest.json format, the CLI may require a specific format version. The current structure includes all required files but may need format adjustments based on your CLI version.
+If you encounter a PA3002 error about `CanvasManifest.json` while packing, ensure you are using a recent Power Platform CLI version (v1.50.1 or later) and that you run the command from the repository root so the manifest file is discovered.
 
 ### Unpack .msapp (for reference)
 ```bash
