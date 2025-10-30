@@ -4,14 +4,24 @@ This folder contains your unpacked PowerApps source files in the proper structur
 
 ## Directory Structure
 ```
-PowerApps_CLI_Ready/
+project/
 ├── Src/                    # Screen and control definitions (.pa.yaml, .fx.yaml)
+│   ├── App.fx_*.yaml       # App-level PowerFx formulas
+│   ├── App.pa_*.yaml       # App properties
+│   ├── Screen1.fx.yaml     # Screen1 PowerFx formulas
+│   ├── Screen1.pa.yaml     # Screen1 properties
+│   └── _EditorState.pa_*.yaml # Editor state metadata
 ├── DataSources/            # Dataverse connections and data sources
-├── CanvasManifest.json     # App manifest
-├── Entropy.json            # Editor metadata
-├── checksum.json           # File checksums
+├── Assets/                 # Static assets and resources
+├── CanvasManifest.json     # App manifest with screen order
+├── Header.json             # App header metadata (required)
+├── Entropy.json            # Editor metadata and control IDs
+├── checksum.json           # File checksums (required)
+├── Resources.json          # Resource definitions (required)
 ├── Connections.json        # Connection references
-└── Other metadata files
+├── ComponentReferences.json # Component references
+├── ControlTemplates.json   # Control template definitions
+└── .gitignore              # Git ignore rules (updated to track required files)
 ```
 
 ## How to Use
@@ -28,11 +38,17 @@ winget install Microsoft.PowerPlatformCLI
 
 ### Pack to .msapp
 ```bash
-# Navigate to parent directory
-cd /path/to/
+# Navigate to the project directory
+cd /path/to/project
 
 # Pack the source into .msapp
-pac canvas pack --sources PowerApps_CLI_Ready --msapp MyApp.msapp
+pac canvas pack --sources . --msapp MyApp.msapp
+```
+
+### Verified Packaging Command
+The following command has been verified to work with this repository structure:
+```bash
+pac canvas pack --sources . --msapp App.msapp
 ```
 
 ### Unpack .msapp (for reference)
@@ -62,6 +78,17 @@ pac canvas publish --path MyApp.msapp
 - Editing YAML directly is advanced - use PowerApps Studio when possible
 - Always backup your .msapp before making manual edits
 - Test thoroughly after packing custom edits
+
+## Required File Structure
+
+This repository now includes all required files for Power Platform CLI packaging:
+- `Header.json` - App header metadata (previously ignored by .gitignore)
+- `checksum.json` - File integrity checksums (previously ignored by .gitignore)
+- `Resources.json` - Resource definitions
+- `Screen1.fx.yaml` and `Screen1.pa.yaml` - Screen definitions matching CanvasManifest.json
+- `Assets/` and `DataSources/` directories with placeholder files
+
+The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
 
 ## Reference
 

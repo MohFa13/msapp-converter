@@ -1,0 +1,25 @@
+Screen1 As screen:
+    Fill: =RGBA(255, 255, 255, 1)
+    OnVisible: =false
+
+    HeaderContainer1 As groupContainer.horizontal:
+        Height: =64
+        Width: =Parent.Width
+        ZIndex: =1
+
+        'Back Button' As icon.BackArrow:
+            Icon: =Icon.BackArrow
+            OnSelect: =Back()
+            ZIndex: =1
+
+    MainContainer1 As groupContainer.vertical:
+        Height: =Parent.Height - 128
+        Width: =Parent.Width
+        Y: =64
+        ZIndex: =2
+
+    FooterContainer1 As groupContainer.horizontal:
+        Height: =64
+        Width: =Parent.Width
+        Y: =Parent.Height - 64
+        ZIndex: =3
