@@ -46,15 +46,38 @@ pac canvas pack --sources . --msapp MyApp.msapp
 ```
 
 ### Prebuilt Package
-A ready-to-import `App.msapp` generated from the current sources is included at the repository root.
+**Important**: A ready-to-use `App.msapp` file is included in the repository root. You can import this directly into Power Apps without needing to run `pac canvas pack`.
 
-### Packaging Command
-Use the following command to regenerate the package from the sources:
+To import the app:
+1. Navigate to [Power Apps](https://make.powerapps.com)
+2. Select **Apps** > **Import canvas app**
+3. Upload the `App.msapp` file from this repository
+
+### Packaging Command (Advanced)
+If you need to regenerate the package from sources:
+
+**Step 1: Validate Structure**
 ```bash
-pac canvas pack --sources . --msapp App.msapp
+# On Windows (PowerShell)
+.\validate-structure.ps1
+
+# On Linux/Mac
+./validate-structure.sh
 ```
 
-If you encounter a PA3002 error about `CanvasManifest.json` while packing, ensure you are using a recent Power Platform CLI version (v1.50.1 or later) and that you run the command from the repository root so the manifest file is discovered.
+**Step 2: Pack the App**
+```bash
+pac canvas pack --sources . --msapp NewApp.msapp
+```
+
+**Troubleshooting PA3002 Error:**
+If you encounter "Can't find CanvasManifest.json file" error:
+- Run the validation script to verify all files are present
+- Ensure you're running the command from the repository root directory
+- Verify `CanvasManifest.json` exists in the directory (use `dir` or `ls`)
+- Check that your Power Platform CLI is v1.50.1 or later
+- On Windows, ensure the path doesn't contain special characters
+- **Recommended**: Use the prebuilt `App.msapp` file instead of repacking
 
 ### Unpack .msapp (for reference)
 ```bash
@@ -92,8 +115,13 @@ This repository now includes all required files for Power Platform CLI packaging
 - `Resources.json` - Resource definitions
 - `Screen1.fx.yaml` and `Screen1.pa.yaml` - Screen definitions matching CanvasManifest.json
 - `Assets/` and `DataSources/` directories with placeholder files
+- `validate-structure.ps1` and `validate-structure.sh` - Validation scripts to verify structure
 
 The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
+
+## Known Issues with pac canvas pack
+
+Some users may encounter PA3002 errors when running `pac canvas pack` even with a valid structure. This appears to be an intermittent issue with certain CLI versions or environments. **The recommended approach is to use the prebuilt `App.msapp` file** included in this repository, which was generated from the same source files and is fully functional for importing into Power Apps.
 
 ## Reference
 
