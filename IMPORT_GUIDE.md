@@ -2,46 +2,45 @@
 
 This guide explains how to import the Canvas App Template into your Power Platform environment.
 
-## Method 1: Import Solution Package (Recommended)
+## Method 1: Import Package (Recommended)
 
-**Best for**: Production environments, ALM scenarios, multi-environment deployments
+**Best for**: Quick deployment, direct app import with metadata
 
 ### Steps:
 
 1. **Download the Package**
-   - File: `CanvasAppTemplate_1_0_0_0.zip` (9.2 KB)
+   - File: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
 
 2. **Navigate to Power Apps**
    - Go to [https://make.powerapps.com](https://make.powerapps.com)
    - Select your target environment from the environment picker (top right)
 
-3. **Open Solutions**
-   - Click **Solutions** in the left navigation menu
+3. **Import Package**
+   - Click **Apps** in the left navigation menu
+   - Click **Import canvas app** at the top
+   - OR go to the Home page and click **Import** > **Import package**
 
-4. **Import Solution**
-   - Click **Import solution** at the top
-   - Click **Browse** and select `CanvasAppTemplate_1_0_0_0.zip`
-   - Click **Next**
+4. **Upload Package**
+   - Click **Upload** or **Browse**
+   - Select `CanvasAppTemplate_1_0_0_0.zip`
+   - Click **Upload**
 
 5. **Review and Import**
-   - Review the solution information:
-     - **Name**: Canvas App Template
-     - **Version**: 1.0.0.0
-     - **Publisher**: Default Publisher
+   - Review the package information:
+     - **Name**: App
+     - **Package Version**: 1.0.0.0
    - Click **Import**
    - Wait for the import to complete (usually takes 10-30 seconds)
 
 6. **Verify**
-   - Once imported, click **Apps** in the left navigation
-   - You should see "App" in your list of canvas apps
-   - Click on it to open and edit
+   - Once imported, the app should appear in your Apps list
+   - Click on it to open and edit in Power Apps Studio
 
 ### Benefits:
-- ✅ Includes solution metadata for proper lifecycle management
-- ✅ Can be exported and re-imported to other environments
-- ✅ Supports versioning
-- ✅ Integrates with ALM processes
-- ✅ Can include connections and dependencies (if added later)
+- ✅ Includes package manifest for proper import
+- ✅ Simple and quick deployment
+- ✅ Works across environments
+- ✅ Preserves app metadata
 
 ## Method 2: Import Canvas App Directly
 
@@ -109,8 +108,9 @@ After importing, you may want to:
 
 ## Troubleshooting
 
-### Import fails with "Invalid solution package"
-- Ensure you downloaded the complete file (check file size: 9.2 KB for .zip or 8.6 KB for .msapp)
+### Import fails with "Invalid package" or "Manifest file not found"
+- Ensure you downloaded the complete file (check file size: 7.1 KB for .zip or 8.6 KB for .msapp)
+- Make sure you're using the "Import canvas app" or "Import package" option (not "Import solution")
 - Try re-downloading the package
 - Check that you have proper permissions in the target environment
 

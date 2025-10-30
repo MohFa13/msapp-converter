@@ -55,22 +55,22 @@ pac canvas pack --sources . --msapp MyApp.msapp
 
 This repository includes two ready-to-use packages:
 
-#### Option 1: Import as Solution Package (Recommended)
-**File**: `CanvasAppTemplate_1_0_0_0.zip`
+#### Option 1: Import as Package (Recommended)
+**File**: `CanvasAppTemplate_1_0_0_0.zip` (7.1 KB)
 
-This is a complete solution package that can be imported into any Power Platform environment:
+This is a Power Platform import package that can be imported into any environment:
 
 1. Navigate to [Power Apps](https://make.powerapps.com)
-2. Select **Solutions** from the left navigation
-3. Click **Import solution**
-4. Click **Browse** and select `CanvasAppTemplate_1_0_0_0.zip`
-5. Click **Next** and follow the import wizard
+2. Select **Apps** from the left navigation
+3. Click **Import canvas app** at the top
+4. Click **Upload** and select `CanvasAppTemplate_1_0_0_0.zip`
+5. Click **Import** and wait for completion
 
 Benefits:
-- Includes solution metadata
-- Can be deployed across environments
-- Supports versioning and lifecycle management
-- Best for production scenarios
+- Includes package manifest with metadata
+- Simple import process
+- Works across environments
+- Best for production deployment
 
 #### Option 2: Import as Canvas App (Quick Import)
 **File**: `App.msapp`
@@ -151,20 +151,16 @@ This repository now includes all required files for Power Platform CLI packaging
 - `Assets/` and `DataSources/` directories with placeholder files
 - `validate-structure.ps1` and `validate-structure.sh` - Validation scripts to verify structure
 - `App.msapp` - Prebuilt canvas app package (8.6 KB)
-- `CanvasAppTemplate_1_0_0_0.zip` - Complete solution package (9.2 KB)
+- `CanvasAppTemplate_1_0_0_0.zip` - Import package (7.1 KB)
 
 The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
 
-### Solution Package Structure
+### Import Package Structure
 The `CanvasAppTemplate_1_0_0_0.zip` file contains:
 ```
 CanvasAppTemplate_1_0_0_0.zip
-├── [Content_Types].xml          # Content type definitions
-├── solution.xml                 # Solution manifest
-├── customizations.xml           # Customization definitions
-└── CanvasApps/
-    ├── new_canvasapp_6fb7a.msapp      # The canvas app
-    └── new_canvasapp_6fb7a.meta.xml   # App metadata
+├── manifest.xml                 # Package manifest with metadata
+└── App.msapp                    # The canvas app
 ```
 
 ## Known Issues with pac canvas pack
