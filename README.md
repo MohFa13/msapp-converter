@@ -4,7 +4,7 @@ This folder contains your unpacked PowerApps source files in the proper structur
 
 ## Quick Start
 
-**Ready to import?** Choose one of the prebuilt packages (`CanvasAppTemplate_1_0_0_0.zip` for app import, `CanvasAppTemplateSolution_1_0_0_0.zip` for solution import) and follow the instructions below.
+**Ready to import?** Use `CanvasAppTemplate_1_0_0_0.zip` (recommended) or `App.msapp` for reliable import. Follow the instructions below.
 
 📖 **[Detailed Import Instructions](IMPORT_GUIDE.md)** | 📦 **[Package Summary](PACKAGE_SUMMARY.md)**
 
@@ -72,10 +72,12 @@ Benefits:
 - Works across environments
 - Best for production deployment
 
-#### Option 2: Import as Solution (Full ALM)
+#### Option 2: Import as Solution (Experimental)
 **File**: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
 
-Use this unmanaged solution if you prefer solution-aware deployment:
+⚠️ **Note**: Canvas app solution import may not work in all environments due to platform limitations. If you encounter "Cannot add a Root Component" errors, please use Option 1 or Option 3 instead.
+
+For environments that support it:
 
 1. Navigate to [Power Apps](https://make.powerapps.com)
 2. Select **Solutions** in the left navigation
@@ -83,10 +85,14 @@ Use this unmanaged solution if you prefer solution-aware deployment:
 4. Select `CanvasAppTemplateSolution_1_0_0_0.zip`
 5. Follow the wizard to complete the import
 
-Benefits:
+Benefits (when supported):
 - Includes `solution.xml`, `customizations.xml`, and `[Content_Types].xml`
 - Canvas app registered as root component (type 300)
 - Compatible with standard ALM tooling
+
+**Known Limitations**:
+- Some Power Platform environments may not support importing standalone canvas apps via unmanaged solutions
+- If import fails, the package import (Option 1) or direct app import (Option 3) will work reliably
 
 #### Option 3: Import as Canvas App (Quick Import)
 **File**: `App.msapp`

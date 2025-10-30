@@ -42,9 +42,11 @@ This guide explains how to import the Canvas App Template into your Power Platfo
 - ✅ Works across environments
 - ✅ Preserves app metadata
 
-## Method 2: Import Unmanaged Solution
+## Method 2: Import Unmanaged Solution (Experimental)
 
-**Best for**: Solution-aware deployments, ALM scenarios, multi-environment rollouts
+**Best for**: Solution-aware deployments (when supported by environment)
+
+⚠️ **Important**: This method may not work in all Power Platform environments due to platform limitations with importing standalone canvas apps via unmanaged solutions. If you encounter errors like "Cannot add a Root Component," please use Method 1 or Method 3 instead.
 
 ### Steps:
 
@@ -74,11 +76,16 @@ This guide explains how to import the Canvas App Template into your Power Platfo
    - After import, open the solution to confirm the canvas app exists
    - The app will also appear under **Apps** for editing
 
-### Benefits:
+### Benefits (when supported):
 - ✅ Solution format with `solution.xml`, `customizations.xml`, `[Content_Types].xml`
 - ✅ Canvas app registered as root component (type 300)
 - ✅ Compatible with pipelines and ALM tooling
 - ✅ Enables exporting and re-importing as part of larger solutions
+
+### Known Limitations:
+- ⚠️ Some environments may not support importing canvas apps via unmanaged solutions
+- ⚠️ Error "Cannot add a Root Component" indicates the environment doesn't support this import method
+- ✅ **Workaround**: Use Method 1 (Package Import) or Method 3 (Direct App Import) instead - both are verified to work
 
 ## Method 3: Import Canvas App Directly
 
@@ -145,6 +152,17 @@ After importing, you may want to:
    - Set appropriate permissions
 
 ## Troubleshooting
+
+### Solution import fails with "Cannot add a Root Component"
+**Full error**: "Cannot add a Root Component new_canvasapp_6fb7a of type 300 because it is not in the target system"
+
+**Cause**: Your Power Platform environment does not support importing standalone canvas apps via unmanaged solutions.
+
+**Solution**: Use one of these verified import methods instead:
+- ✅ **Method 1**: Import Package (`CanvasAppTemplate_1_0_0_0.zip`) - Works in all environments
+- ✅ **Method 3**: Direct App Import (`App.msapp`) - Works in all environments
+
+Both methods will successfully import the canvas app into your environment.
 
 ### Import fails with "Invalid package" or "Manifest file not found"
 - Ensure you downloaded the complete file (check file size: 7.1 KB for .zip or 7.6 KB for .msapp)

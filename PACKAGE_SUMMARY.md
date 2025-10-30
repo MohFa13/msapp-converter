@@ -14,12 +14,16 @@ This is a Power Platform import package that includes:
 
 **Import via**: Power Apps Portal → Apps → Import canvas app OR Import → Import package
 
-### 2. Unmanaged Solution Package (Full ALM)
+### 2. Unmanaged Solution Package (Experimental)
 **File**: `CanvasAppTemplateSolution_1_0_0_0.zip` (8.8 KB)
+
+⚠️ **Note**: May not work in all environments. Use Package #1 or #3 if import fails.
 
 Standard unmanaged solution containing the canvas app as a root component.
 
 **Import via**: Power Apps Portal → Solutions → Import solution
+
+**Known Limitation**: Some Power Platform environments do not support importing standalone canvas apps via unmanaged solutions. If you see "Cannot add a Root Component" errors, use Package #1 or #3 instead.
 
 ### 3. Canvas App Package (Quick Import)
 **File**: `App.msapp` (7.6 KB)
