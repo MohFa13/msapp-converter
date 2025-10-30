@@ -49,7 +49,7 @@ This guide explains how to import the Canvas App Template into your Power Platfo
 ### Steps:
 
 1. **Download the Package**
-   - File: `App.msapp` (8.6 KB)
+   - File: `App.msapp` (7.6 KB)
 
 2. **Navigate to Power Apps**
    - Go to [https://make.powerapps.com](https://make.powerapps.com)
@@ -109,7 +109,7 @@ After importing, you may want to:
 ## Troubleshooting
 
 ### Import fails with "Invalid package" or "Manifest file not found"
-- Ensure you downloaded the complete file (check file size: 7.1 KB for .zip or 8.6 KB for .msapp)
+- Ensure you downloaded the complete file (check file size: 7.1 KB for .zip or 7.6 KB for .msapp)
 - Make sure you're using the "Import canvas app" or "Import package" option (not "Import solution")
 - Try re-downloading the package
 - Check that you have proper permissions in the target environment

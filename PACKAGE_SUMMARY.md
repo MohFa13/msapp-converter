@@ -15,7 +15,7 @@ This is a Power Platform import package that includes:
 **Import via**: Power Apps Portal → Apps → Import canvas app OR Import → Import package
 
 ### 2. Canvas App Package (Quick Import)
-**File**: `App.msapp` (8.6 KB)
+**File**: `App.msapp` (7.6 KB)
 
 Standalone canvas app package for quick testing and development.
 
@@ -34,7 +34,7 @@ The complete unpacked source structure including:
 
 | Feature | Import Package (.zip) | Canvas App (.msapp) | Source Files |
 |---------|----------------------|---------------------|--------------|
-| File Size | 7.1 KB | 8.6 KB | ~15 KB |
+| File Size | 7.1 KB | 7.6 KB | ~15 KB |
 | Import Method | Import package | Import canvas app | pac canvas pack |
 | Versioning | ✅ Yes | ❌ No | ✅ Yes (when packed) |
 | Package Metadata | ✅ Full | ⚠️ Basic | ✅ Full |

@@ -150,7 +150,7 @@ This repository now includes all required files for Power Platform CLI packaging
 - `Screen1.fx.yaml` and `Screen1.pa.yaml` - Screen definitions matching CanvasManifest.json
 - `Assets/` and `DataSources/` directories with placeholder files
 - `validate-structure.ps1` and `validate-structure.sh` - Validation scripts to verify structure
-- `App.msapp` - Prebuilt canvas app package (8.6 KB)
+- `App.msapp` - Prebuilt canvas app package (7.6 KB)
 - `CanvasAppTemplate_1_0_0_0.zip` - Import package (7.1 KB)
 
 The `.gitignore` has been updated to allow tracking of required metadata files while still excluding temporary build artifacts.
