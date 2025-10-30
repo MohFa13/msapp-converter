@@ -45,11 +45,13 @@ cd /path/to/project
 pac canvas pack --sources . --msapp MyApp.msapp
 ```
 
-### Verified Packaging Command
-The following command has been verified to work with this repository structure:
+### Packaging Command
+Use the following command to pack the source into .msapp:
 ```bash
 pac canvas pack --sources . --msapp App.msapp
 ```
+
+**Note**: If you encounter a PA3002 error about CanvasManifest.json format, the CLI may require a specific format version. The current structure includes all required files but may need format adjustments based on your CLI version.
 
 ### Unpack .msapp (for reference)
 ```bash
