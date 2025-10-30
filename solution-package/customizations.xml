@@ -15,7 +15,4 @@
   <Languages>
     <Language>1033</Language>
   </Languages>
-  <CanvasApps>
-    <CanvasApp CanvasAppName="App" CanvasAppUniqueName="new_canvasapp_6fb7a" DisplayName="App" Description="" CommitMessage="" BackgroundColor="RGBA(0,176,240,1)" ConnectionReferencesJson="[]" AuthorizationReferencesJson="[]" DataverseSolutionsJson="[]" AppVersion="2024-10-30T13:30:00Z" MinClientVersion="1.331" />
-  </CanvasApps>
 </ImportExportXml>
