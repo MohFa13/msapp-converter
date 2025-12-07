@@ -1,0 +1,595 @@
+RfpScreen As screen:
+    Fill: =RGBA(245, 245, 245, 1)
+    OnVisible: |
+        =// Initialize RFPs collection if empty
+        If(
+            IsEmpty(colRFPs),
+            Collect(
+                colRFPs,
+                {Id: 1, Name: "Enterprise Cloud Migration", Status: "In Review", SubmissionDate: Date(2025, 1, 15), AssignedEngineer: "Alice Johnson"},
+                {Id: 2, Name: "Mobile App Development", Status: "Draft", SubmissionDate: Date(2025, 1, 20), AssignedEngineer: "Bob Smith"},
+                {Id: 3, Name: "Data Analytics Platform", Status: "Approved", SubmissionDate: Date(2025, 1, 10), AssignedEngineer: "Charlie Brown"},
+                {Id: 4, Name: "Security Audit Project", Status: "Submitted", SubmissionDate: Date(2025, 1, 25), AssignedEngineer: "Diana Prince"}
+            )
+        );
+        // Initialize status collection
+        If(
+            IsEmpty(colStatuses),
+            Collect(
+                colStatuses,
+                {Status: "All", Selected: true},
+                {Status: "Draft", Selected: false},
+                {Status: "Submitted", Selected: false},
+                {Status: "In Review", Selected: false},
+                {Status: "Approved", Selected: false},
+                {Status: "Rejected", Selected: false}
+            )
+        );
+        // Reset form mode and selection
+        UpdateContext({varFormMode: "view", varSelectedRFP: Blank(), varFormVisible: false});
+
+    HeaderContainer As groupContainer.horizontal:
+        AlignInContainer: =AlignInContainer.SetByContainer
+        Fill: =RGBA(0, 120, 212, 1)
+        Height: =64
+        LayoutAlignItems: =LayoutAlignItems.Center
+        LayoutMinWidth: =100
+        LayoutMode: =LayoutMode.Auto
+        PaddingLeft: =20
+        Width: =Parent.Width
+        ZIndex: =1
+
+        HeaderTitle As label:
+            Align: =Align.Left
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            PaddingLeft: =10
+            Size: =20
+            Text: ="Request for Proposal Manager"
+            Width: =600
+            ZIndex: =1
+
+    MainContentContainer As groupContainer.horizontal:
+        AlignInContainer: =AlignInContainer.SetByContainer
+        Height: =Parent.Height - 64
+        LayoutMinWidth: =100
+        LayoutMode: =LayoutMode.Auto
+        Width: =Parent.Width
+        Y: =64
+        ZIndex: =2
+
+        FilterPanel As groupContainer.vertical:
+            AlignInContainer: =AlignInContainer.SetByContainer
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Parent.Height
+            LayoutMinHeight: =100
+            LayoutMinWidth: =280
+            LayoutMode: =LayoutMode.Auto
+            PaddingBottom: =20
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =20
+            Width: =If(Parent.Width < 768, Parent.Width, 320)
+            ZIndex: =1
+
+            FilterTitle As label:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Color: =RGBA(51, 51, 51, 1)
+                Fill: =RGBA(0, 0, 0, 0)
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                LayoutMinHeight: =40
+                Size: =16
+                Text: ="Filters"
+                Width: =Parent.Width - 40
+                ZIndex: =1
+
+            SearchLabel As label:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Color: =RGBA(51, 51, 51, 1)
+                Fill: =RGBA(0, 0, 0, 0)
+                Font: =Font.'Segoe UI'
+                Height: =30
+                LayoutMinHeight: =30
+                PaddingTop: =10
+                Size: =12
+                Text: ="Search"
+                Width: =Parent.Width - 40
+                ZIndex: =2
+
+            SearchInput As text:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Default: =""
+                Height: =40
+                HintText: ="Search by name or engineer..."
+                LayoutMinHeight: =40
+                Width: =Parent.Width - 40
+                ZIndex: =3
+
+            StatusLabel As label:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Color: =RGBA(51, 51, 51, 1)
+                Fill: =RGBA(0, 0, 0, 0)
+                Font: =Font.'Segoe UI'
+                Height: =30
+                LayoutMinHeight: =30
+                PaddingTop: =20
+                Size: =12
+                Text: ="Status"
+                Width: =Parent.Width - 40
+                ZIndex: =4
+
+            StatusFilterGallery As gallery.galleryVertical:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Height: =Min(300, Parent.Height - 250)
+                Items: =colStatuses
+                Layout: =Layout.Vertical
+                LayoutMinHeight: =150
+                TemplatePadding: =0
+                TemplateSize: =40
+                Width: =Parent.Width - 40
+                ZIndex: =5
+
+                StatusCheckbox As checkbox:
+                    BorderColor: =RGBA(0, 120, 212, 1)
+                    CheckboxBackgroundFill: =RGBA(255, 255, 255, 1)
+                    CheckboxBorderColor: =RGBA(128, 128, 128, 1)
+                    CheckboxSize: =20
+                    Color: =If(ThisItem.Selected, RGBA(0, 120, 212, 1), RGBA(51, 51, 51, 1))
+                    Default: =ThisItem.Selected
+                    Height: =Parent.TemplateHeight
+                    OnCheck: |
+                        =If(
+                            ThisItem.Status = "All",
+                            ForAll(
+                                Filter(colStatuses, Status <> "All"),
+                                Patch(colStatuses, ThisRecord, {Selected: false})
+                            );
+                            Patch(colStatuses, LookUp(colStatuses, Status = "All"), {Selected: true}),
+                            Patch(colStatuses, LookUp(colStatuses, Status = ThisItem.Status), {Selected: true});
+                            Patch(colStatuses, LookUp(colStatuses, Status = "All"), {Selected: false})
+                        )
+                    OnUncheck: |
+                        =Patch(colStatuses, LookUp(colStatuses, Status = ThisItem.Status), {Selected: false});
+                        If(
+                            CountRows(Filter(colStatuses, Selected)) = 0,
+                            Patch(colStatuses, LookUp(colStatuses, Status = "All"), {Selected: true})
+                        )
+                    Text: =ThisItem.Status
+                    Width: =Parent.Width
+                    ZIndex: =1
+
+            ClearFiltersButton As button:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Height: =40
+                LayoutMinHeight: =40
+                OnSelect: |
+                    =Reset(SearchInput);
+                    ForAll(
+                        colStatuses,
+                        Patch(colStatuses, ThisRecord, {Selected: ThisRecord.Status = "All"})
+                    )
+                PaddingTop: =10
+                Text: ="Clear Filters"
+                Width: =Parent.Width - 40
+                ZIndex: =6
+
+        ContentPanel As groupContainer.vertical:
+            AlignInContainer: =AlignInContainer.SetByContainer
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Parent.Height
+            LayoutMinHeight: =100
+            LayoutMinWidth: =400
+            LayoutMode: =LayoutMode.Auto
+            PaddingBottom: =20
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =20
+            Width: =If(Parent.Width < 768, Parent.Width, Parent.Width - 320)
+            ZIndex: =2
+
+            ActionButtonsContainer As groupContainer.horizontal:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Height: =50
+                LayoutMinHeight: =50
+                LayoutMinWidth: =100
+                LayoutMode: =LayoutMode.Auto
+                Width: =Parent.Width - 40
+                ZIndex: =1
+
+                AddButton As button:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    Fill: =RGBA(0, 176, 80, 1)
+                    Height: =40
+                    OnSelect: |
+                        =UpdateContext({
+                            varFormMode: "new",
+                            varSelectedRFP: Blank(),
+                            varFormVisible: true
+                        });
+                        NewForm(RfpForm);
+                        ResetForm(RfpForm)
+                    Text: ="+ Add RFP"
+                    Width: =120
+                    ZIndex: =1
+
+                EditButton As button:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    DisplayMode: =If(IsBlank(varSelectedRFP), DisplayMode.Disabled, DisplayMode.Edit)
+                    Fill: =RGBA(0, 120, 212, 1)
+                    Height: =40
+                    OnSelect: |
+                        =UpdateContext({
+                            varFormMode: "edit",
+                            varFormVisible: true
+                        });
+                        EditForm(RfpForm)
+                    PaddingLeft: =10
+                    Text: ="Edit"
+                    Width: =100
+                    ZIndex: =2
+
+                DeleteButton As button:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    DisplayMode: =If(IsBlank(varSelectedRFP), DisplayMode.Disabled, DisplayMode.Edit)
+                    Fill: =RGBA(192, 0, 0, 1)
+                    Height: =40
+                    OnSelect: |
+                        =If(
+                            !IsBlank(varSelectedRFP),
+                            Remove(colRFPs, varSelectedRFP);
+                            UpdateContext({varSelectedRFP: Blank(), varFormVisible: false});
+                            ResetForm(RfpForm);
+                            Notify("RFP deleted successfully", NotificationType.Success),
+                            Notify("Please select an RFP to delete", NotificationType.Warning)
+                        )
+                    PaddingLeft: =10
+                    Text: ="Delete"
+                    Width: =100
+                    ZIndex: =3
+
+            RfpGallery As gallery.galleryVertical:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderThickness: =1
+                Height: =Parent.Height - 90
+                Items: |
+                    =With(
+                        {
+                            searchText: Lower(Coalesce(SearchInput.Text, "")),
+                            statusSource: colStatuses
+                        },
+                        With(
+                            {
+                                selectedStatusRecords: If(
+                                    IsEmpty(statusSource),
+                                    Table({Status: ""}),
+                                    Filter(statusSource, Selected && Status <> "All")
+                                ),
+                                allStatusesSelected: If(
+                                    IsEmpty(statusSource),
+                                    true,
+                                    LookUp(statusSource, Status = "All", Selected)
+                                )
+                            },
+                            Filter(
+                                colRFPs As rfp,
+                                (IsBlank(searchText) || 
+                                 searchText in Lower(rfp.Name) || 
+                                 searchText in Lower(rfp.AssignedEngineer)) &&
+                                (allStatusesSelected || CountIf(selectedStatusRecords, Status = rfp.Status) > 0)
+                            )
+                        )
+                    )
+                Layout: =Layout.Vertical
+                LayoutMinHeight: =200
+                TemplatePadding: =5
+                TemplateSize: =120
+                Width: =Parent.Width - 40
+                ZIndex: =2
+
+                GalleryItemContainer As groupContainer.vertical:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    BorderColor: =If(!IsBlank(varSelectedRFP) && ThisItem.Id = varSelectedRFP.Id, RGBA(0, 120, 212, 1), RGBA(230, 230, 230, 1))
+                    BorderThickness: =2
+                    Fill: =If(!IsBlank(varSelectedRFP) && ThisItem.Id = varSelectedRFP.Id, RGBA(230, 240, 250, 1), RGBA(255, 255, 255, 1))
+                    Height: =Parent.TemplateHeight - 10
+                    LayoutMinHeight: =100
+                    LayoutMinWidth: =100
+                    LayoutMode: =LayoutMode.Auto
+                    OnSelect: |
+                        =UpdateContext({
+                            varSelectedRFP: If(!IsBlank(varSelectedRFP) && varSelectedRFP.Id = ThisItem.Id, Blank(), ThisItem)
+                        })
+                    PaddingBottom: =10
+                    PaddingLeft: =15
+                    PaddingRight: =15
+                    PaddingTop: =10
+                    Width: =Parent.Width - 10
+                    ZIndex: =1
+
+                    RfpNameLabel As label:
+                        AlignInContainer: =AlignInContainer.SetByContainer
+                        Color: =RGBA(0, 0, 0, 1)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        LayoutMinHeight: =30
+                        Size: =14
+                        Text: =ThisItem.Name
+                        Width: =Parent.Width - 30
+                        ZIndex: =1
+
+                    RfpDetailsContainer As groupContainer.horizontal:
+                        AlignInContainer: =AlignInContainer.SetByContainer
+                        Height: =30
+                        LayoutMinHeight: =30
+                        LayoutMinWidth: =100
+                        LayoutMode: =LayoutMode.Auto
+                        Width: =Parent.Width - 30
+                        ZIndex: =2
+
+                        StatusPill As label:
+                            AlignInContainer: =AlignInContainer.SetByContainer
+                            Align: =Align.Center
+                            BorderColor: =Switch(
+                                ThisItem.Status,
+                                "Draft", RGBA(128, 128, 128, 1),
+                                "Submitted", RGBA(0, 120, 212, 1),
+                                "In Review", RGBA(255, 165, 0, 1),
+                                "Approved", RGBA(0, 176, 80, 1),
+                                "Rejected", RGBA(192, 0, 0, 1),
+                                RGBA(128, 128, 128, 1)
+                            )
+                            BorderThickness: =1
+                            Color: =Switch(
+                                ThisItem.Status,
+                                "Draft", RGBA(128, 128, 128, 1),
+                                "Submitted", RGBA(0, 120, 212, 1),
+                                "In Review", RGBA(255, 165, 0, 1),
+                                "Approved", RGBA(0, 176, 80, 1),
+                                "Rejected", RGBA(192, 0, 0, 1),
+                                RGBA(128, 128, 128, 1)
+                            )
+                            Fill: =Switch(
+                                ThisItem.Status,
+                                "Draft", RGBA(240, 240, 240, 1),
+                                "Submitted", RGBA(230, 240, 255, 1),
+                                "In Review", RGBA(255, 245, 230, 1),
+                                "Approved", RGBA(230, 255, 240, 1),
+                                "Rejected", RGBA(255, 230, 230, 1),
+                                RGBA(240, 240, 240, 1)
+                            )
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Height: =Parent.Height
+                            PaddingLeft: =10
+                            PaddingRight: =10
+                            Size: =10
+                            Text: =ThisItem.Status
+                            Width: =120
+                            ZIndex: =1
+
+                    DateEngineerContainer As groupContainer.horizontal:
+                        AlignInContainer: =AlignInContainer.SetByContainer
+                        Height: =30
+                        LayoutMinHeight: =30
+                        LayoutMinWidth: =100
+                        LayoutMode: =LayoutMode.Auto
+                        Width: =Parent.Width - 30
+                        ZIndex: =3
+
+                        SubmissionDateLabel As label:
+                            AlignInContainer: =AlignInContainer.SetByContainer
+                            Color: =RGBA(102, 102, 102, 1)
+                            Fill: =RGBA(0, 0, 0, 0)
+                            Font: =Font.'Segoe UI'
+                            Height: =Parent.Height
+                            Size: =11
+                            Text: ="Submitted: " & Text(ThisItem.SubmissionDate, "mm/dd/yyyy")
+                            Width: =200
+                            ZIndex: =1
+
+                        AssignedEngineerLabel As label:
+                            AlignInContainer: =AlignInContainer.SetByContainer
+                            Color: =RGBA(102, 102, 102, 1)
+                            Fill: =RGBA(0, 0, 0, 0)
+                            Font: =Font.'Segoe UI'
+                            Height: =Parent.Height
+                            PaddingLeft: =20
+                            Size: =11
+                            Text: ="Engineer: " & ThisItem.AssignedEngineer
+                            Width: =Parent.Width - 220
+                            ZIndex: =2
+
+            FormContainer As groupContainer.vertical:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                Fill: =RGBA(255, 255, 255, 1)
+                Height: =Parent.Height - 70
+                LayoutMinHeight: =400
+                LayoutMinWidth: =400
+                LayoutMode: =LayoutMode.Auto
+                PaddingBottom: =20
+                PaddingLeft: =20
+                PaddingRight: =20
+                PaddingTop: =20
+                Visible: =varFormVisible
+                Width: =Parent.Width - 40
+                X: =If(varFormVisible, 0, Parent.Width)
+                ZIndex: =3
+
+                FormTitle As label:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    Color: =RGBA(0, 0, 0, 1)
+                    Fill: =RGBA(0, 0, 0, 0)
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Bold
+                    Height: =40
+                    LayoutMinHeight: =40
+                    Size: =18
+                    Text: =If(varFormMode = "new", "Add New RFP", "Edit RFP")
+                    Width: =Parent.Width - 40
+                    ZIndex: =1
+
+                RfpForm As form:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    DataSource: =colRFPs
+                    DefaultMode: =If(varFormMode = "new", FormMode.New, FormMode.Edit)
+                    Height: =Parent.Height - 140
+                    Item: =If(varFormMode = "edit", varSelectedRFP, Defaults(colRFPs))
+                    LayoutMinHeight: =300
+                    Width: =Parent.Width - 40
+                    ZIndex: =2
+
+                    NameDataCard As typedDataCard.v2:
+                        DataField: ="Name"
+                        Default: =If(varFormMode = "edit", Parent.Item.Name, "")
+                        DisplayName: ="RFP Name"
+                        Height: =80
+                        Required: =true
+                        Width: =Parent.Width
+                        ZIndex: =1
+
+                        NameInput As text:
+                            Default: =Parent.Default
+                            Height: =40
+                            HintText: ="Enter RFP name"
+                            Width: =Parent.Width - 20
+                            Y: =35
+                            ZIndex: =1
+
+                    StatusDataCard As typedDataCard.v2:
+                        DataField: ="Status"
+                        Default: =If(varFormMode = "edit", Parent.Item.Status, "Draft")
+                        DisplayName: ="Status"
+                        Height: =80
+                        Required: =true
+                        Width: =Parent.Width
+                        Y: =90
+                        ZIndex: =2
+
+                        StatusDropdown As dropdown:
+                            AllowEmptySelection: =false
+                            Default: =Parent.Default
+                            DisplayMode: =DisplayMode.Edit
+                            Height: =40
+                            Items: =["Draft", "Submitted", "In Review", "Approved", "Rejected"]
+                            Width: =Parent.Width - 20
+                            Y: =35
+                            ZIndex: =1
+
+                    SubmissionDateDataCard As typedDataCard.v2:
+                        DataField: ="SubmissionDate"
+                        Default: =If(varFormMode = "edit", Parent.Item.SubmissionDate, Today())
+                        DisplayName: ="Submission Date"
+                        Height: =80
+                        Required: =true
+                        Width: =Parent.Width
+                        Y: =180
+                        ZIndex: =3
+
+                        SubmissionDatePicker As datepicker:
+                            Default: =Parent.Default
+                            Format: =DateTimeFormat.ShortDate
+                            Height: =40
+                            Width: =Parent.Width - 20
+                            Y: =35
+                            ZIndex: =1
+
+                    AssignedEngineerDataCard As typedDataCard.v2:
+                        DataField: ="AssignedEngineer"
+                        Default: =If(varFormMode = "edit", Parent.Item.AssignedEngineer, "")
+                        DisplayName: ="Assigned Engineer"
+                        Height: =80
+                        Required: =true
+                        Width: =Parent.Width
+                        Y: =270
+                        ZIndex: =4
+
+                        AssignedEngineerInput As text:
+                            Default: =Parent.Default
+                            Height: =40
+                            HintText: ="Enter engineer name"
+                            Width: =Parent.Width - 20
+                            Y: =35
+                            ZIndex: =1
+
+                FormButtonsContainer As groupContainer.horizontal:
+                    AlignInContainer: =AlignInContainer.SetByContainer
+                    Height: =60
+                    LayoutMinHeight: =60
+                    LayoutMinWidth: =100
+                    LayoutMode: =LayoutMode.Auto
+                    Width: =Parent.Width - 40
+                    ZIndex: =3
+
+                    SaveButton As button:
+                        AlignInContainer: =AlignInContainer.SetByContainer
+                        DisplayMode: =If(
+                            IsBlank(Trim(NameInput.Text)) ||
+                            IsBlank(Trim(AssignedEngineerInput.Text)) ||
+                            IsBlank(SubmissionDatePicker.SelectedDate),
+                            DisplayMode.Disabled,
+                            DisplayMode.Edit
+                        )
+                        Fill: =RGBA(0, 120, 212, 1)
+                        Height: =40
+                        OnSelect: |
+                            =If(
+                                varFormMode = "new",
+                                With(
+                                    {
+                                        createdRfp: Patch(
+                                            colRFPs,
+                                            Defaults(colRFPs),
+                                            {
+                                                Id: If(IsEmpty(colRFPs), 1, Max(colRFPs, Id) + 1),
+                                                Name: Trim(NameInput.Text),
+                                                Status: StatusDropdown.Selected.Value,
+                                                SubmissionDate: SubmissionDatePicker.SelectedDate,
+                                                AssignedEngineer: Trim(AssignedEngineerInput.Text)
+                                            }
+                                        )
+                                    },
+                                    UpdateContext({varSelectedRFP: createdRfp});
+                                    Notify("RFP created successfully", NotificationType.Success)
+                                ),
+                                With(
+                                    {
+                                        updatedRfp: Patch(
+                                            colRFPs,
+                                            varSelectedRFP,
+                                            {
+                                                Name: Trim(NameInput.Text),
+                                                Status: StatusDropdown.Selected.Value,
+                                                SubmissionDate: SubmissionDatePicker.SelectedDate,
+                                                AssignedEngineer: Trim(AssignedEngineerInput.Text)
+                                            }
+                                        )
+                                    },
+                                    UpdateContext({varSelectedRFP: updatedRfp});
+                                    Notify("RFP updated successfully", NotificationType.Success)
+                                )
+                            );
+                            UpdateContext({varFormVisible: false});
+                            ResetForm(RfpForm)
+                        Text: ="Save"
+                        Width: =120
+                        ZIndex: =1
+
+                    CancelButton As button:
+                        AlignInContainer: =AlignInContainer.SetByContainer
+                        Fill: =RGBA(128, 128, 128, 1)
+                        Height: =40
+                        OnSelect: |
+                            =UpdateContext({varFormVisible: false});
+                            ResetForm(RfpForm)
+                        PaddingLeft: =10
+                        Text: ="Cancel"
+                        Width: =120
+                        ZIndex: =2

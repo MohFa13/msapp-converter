@@ -6,6 +6,6 @@
 # 
 # For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
 # ************************************************************************************************
-EditorState:
-  ScreensOrder:
-    - RfpScreen
+RfpScreen:
+  Properties:
+    Fill: =RGBA(245, 245, 245, 1)
