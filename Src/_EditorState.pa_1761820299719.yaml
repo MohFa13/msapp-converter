@@ -9,3 +9,6 @@
 EditorState:
   ScreensOrder:
     - Screen1
+    - Screen_RFPs
+    - Screen_Projects
+    - Screen_Tasks
