@@ -1,0 +1,174 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screen_RFPs As screen:
+    
+    Fill: =RGBA(240, 240, 240, 1)
+    
+    Container_Header As groupContainer.verticalAutoLayoutContainer:
+        X: =0
+        Y: =0
+        Width: =Parent.Width
+        Height: =80
+        Fill: =RGBA(0, 120, 212, 1)
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutAlignItems: =LayoutAlignItems.Start
+        LayoutJustifyContent: =LayoutJustifyContent.Center
+        PaddingTop: =10
+        PaddingBottom: =10
+        PaddingLeft: =20
+        PaddingRight: =20
+        
+        Button_Back As button:
+            Text: ="← Back"
+            OnSelect: =Back()
+            Width: =80
+            Height: =40
+            Fill: =RGBA(255, 255, 255, 0.2)
+            Color: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(255, 255, 255, 0.5)
+            BorderThickness: =1
+            BorderRadius: =5
+            
+        Label_Title As label:
+            Text: ="Request for Proposals"
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontSize: =24
+            FontWeight: =FontWeight.Semibold
+            Width: =Parent.Width - 120
+            Height: =40
+            Align: =Align.Left
+    
+    Container_Main As groupContainer.verticalAutoLayoutContainer:
+        X: =0
+        Y: =Container_Header.Y + Container_Header.Height
+        Width: =Parent.Width
+        Height: =Parent.Height - Container_Header.Height
+        Fill: =RGBA(240, 240, 240, 1)
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutAlignItems: =LayoutAlignItems.Start
+        LayoutJustifyContent: =LayoutJustifyContent.Start
+        PaddingTop: =20
+        PaddingBottom: =20
+        PaddingLeft: =20
+        PaddingRight: =20
+        
+        Button_AddRFP As button:
+            Text:="+ New RFP"
+            OnSelect: =Back()
+            Width: =150
+            Height: =40
+            Fill: =RGBA(40, 167, 69, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            BorderRadius: =5
+            
+        Label_RFPList As label:
+            Text: ="Active RFPs"
+            Color: =RGBA(0, 0, 0, 1)
+            Font: =Font.'Segoe UI'
+            FontSize: =18
+            FontWeight: =FontWeight.Semibold
+            Width: =Parent.Width - 40
+            Height: =30
+            Align: =Align.Left
+        
+        Gallery_RFPs As gallery.verticalTemplate:
+            Items: =["RFP001", "RFP002", "RFP003"]
+            X: =0
+            Y: =80
+            Width: =Parent.Width - 40
+            Height: =Parent.Height - 120
+            TemplateSize: =120
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(200, 200, 200, 1)
+            BorderThickness: =1
+            BorderRadius: =8
+            
+            Container_RFPItem As groupContainer.verticalAutoLayoutContainer:
+                Width: =Parent.Width - 40
+                Height: =100
+                X: =20
+                Y: =10
+                Fill: =RGBA(255, 255, 255, 1)
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutAlignItems: =LayoutAlignItems.Start
+                LayoutJustifyContent: =LayoutJustifyContent.Start
+                PaddingTop: =10
+                PaddingBottom: =10
+                PaddingLeft: =15
+                PaddingRight: =15
+                
+                Label_RFPID As label:
+                    Text: =ThisItem
+                    Color: =RGBA(0, 120, 212, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =14
+                    FontWeight: =FontWeight.Bold
+                    Width: =60
+                    Height: =20
+                    Align: =Align.Left
+                
+                Label_RFPTitle As label:
+                    Text: ="Sample RFP Title"
+                    Color: =RGBA(0, 0, 0, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =16
+                    FontWeight: =FontWeight.Semibold
+                    Width: =Parent.Width - 30
+                    Height: =25
+                    Align: =Align.Left
+                
+                Label_Client As label:
+                    Text: ="Client: Sample Client"
+                    Color: =RGBA(100, 100, 100, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =12
+                    Width: =Parent.Width - 30
+                    Height: =20
+                    Align: =Align.Left
+                
+                Container_RFPDetails As groupContainer.horizontalAutoLayoutContainer:
+                    Width: =Parent.Width - 30
+                    Height: =25
+                    LayoutDirection: =LayoutDirection.Horizontal
+                    LayoutAlignItems: =LayoutAlignItems.Center
+                    LayoutJustifyContent: =LayoutJustifyContent.SpaceBetween
+                    
+                    Label_DueDate As label:
+                        Text: ="Due: 12/31/2024"
+                        Color: =RGBA(100, 100, 100, 1)
+                        Font: =Font.'Segoe UI'
+                        FontSize: =12
+                        Width: =100
+                        Height: =20
+                        Align: =Align.Left
+                    
+                    Label_Value As label:
+                        Text: ="$50,000"
+                        Color: =RGBA(40, 167, 69, 1)
+                        Font: =Font.'Segoe UI'
+                        FontSize: =14
+                        FontWeight: =FontWeight.Bold
+                        Width: =80
+                        Height: =20
+                        Align: =Align.Right
+                    
+                    Label_Status As label:
+                        Text: ="In Progress"
+                        Color: =RGBA(255, 193, 7, 1)
+                        Font: =Font.'Segoe UI'
+                        FontSize: =12
+                        FontWeight: =FontWeight.Semibold
+                        Width: =80
+                        Height: =20
+                        Align: =Align.Center
+                        Fill: =RGBA(255, 193, 7, 0.1)
+                        BorderColor: =RGBA(255, 193, 7, 1)
+                        BorderThickness: =1
+                        BorderRadius: =10

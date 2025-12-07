@@ -1,0 +1,194 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screen1 As screen:
+    
+    OnStart: =Set(varUser,User().Email)
+    Fill: =RGBA(240, 240, 240, 1)
+    
+    Container_Header As groupContainer.verticalAutoLayoutContainer:
+        X: =0
+        Y: =0
+        Width: =Parent.Width
+        Height: =80
+        Fill: =RGBA(0, 120, 212, 1)
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutAlignItems: =LayoutAlignItems.Start
+        LayoutJustifyContent: =LayoutJustifyContent.Center
+        PaddingTop: =10
+        PaddingBottom: =10
+        PaddingLeft: =20
+        PaddingRight: =20
+        
+        Label_Title As label:
+            Text: ="Project Management Dashboard"
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontSize: =24
+            FontWeight: =FontWeight.Semibold
+            Width: =Parent.Width - 40
+            Height: =40
+            Align: =Align.Left
+    
+    Container_Navigation As groupContainer.horizontalAutoLayoutContainer:
+        X: =0
+        Y: =Container_Header.Y + Container_Header.Height
+        Width: =Parent.Width
+        Height: =60
+        Fill: =RGBA(255, 255, 255, 1)
+        BorderColor: =RGBA(200, 200, 200, 1)
+        BorderThickness: =1
+        LayoutDirection: =LayoutDirection.Horizontal
+        LayoutAlignItems: =LayoutAlignItems.Center
+        LayoutJustifyContent: =LayoutJustifyContent.Start
+        PaddingLeft: =20
+        PaddingRight: =20
+        PaddingTop: =10
+        PaddingBottom: =10
+        
+        Button_RFPs As button:
+            Text: ="RFPs"
+            OnSelect: =Back()
+            Width: =100
+            Height: =40
+            Fill: =RGBA(0, 120, 212, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            BorderRadius: =5
+            
+        Button_Projects As button:
+            Text: ="Projects"
+            OnSelect: =Back()
+            Width: =100
+            Height: =40
+            Fill: =RGBA(0, 120, 212, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            BorderRadius: =5
+            
+        Button_Tasks As button:
+            Text: ="My Tasks"
+            OnSelect: =Back()
+            Width: =100
+            Height: =40
+            Fill: =RGBA(0, 120, 212, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            BorderRadius: =5
+    
+    Container_Main As groupContainer.verticalAutoLayoutContainer:
+        X: =0
+        Y: =Container_Navigation.Y + Container_Navigation.Height
+        Width: =Parent.Width
+        Height: =Parent.Height - Container_Header.Height - Container_Navigation.Height - 60
+        Fill: =RGBA(240, 240, 240, 1)
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutAlignItems: =LayoutAlignItems.Start
+        LayoutJustifyContent: =LayoutJustifyContent.Start
+        PaddingTop: =20
+        PaddingBottom: =20
+        PaddingLeft: =20
+        PaddingRight: =20
+        
+        Label_Welcome As label:
+            Text: ="Welcome, " & varUser & "!"
+            Color: =RGBA(0, 0, 0, 1)
+            Font: =Font.'Segoe UI'
+            FontSize: =18
+            FontWeight: =FontWeight.Semibold
+            Width: =Parent.Width - 40
+            Height: =30
+            Align: =Align.Left
+            
+        Label_DashboardTitle As label:
+            Text: ="Dashboard Overview"
+            Color: =RGBA(0, 0, 0, 1)
+            Font: =Font.'Segoe UI'
+            FontSize: =16
+            FontWeight: =FontWeight.Normal
+            Width: =Parent.Width - 40
+            Height: =25
+            Align: =Align.Left
+        
+        Container_Stats As groupContainer.horizontalAutoLayoutContainer:
+            Width: =Parent.Width - 40
+            Height: =120
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(200, 200, 200, 1)
+            BorderThickness: =1
+            BorderRadius: =8
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutAlignItems: =LayoutAlignItems.Center
+            LayoutJustifyContent: =LayoutJustifyContent.SpaceAround
+            PaddingTop: =15
+            PaddingBottom: =15
+            PaddingLeft: =15
+            PaddingRight: =15
+            
+            Container_RFPCount As groupContainer.verticalAutoLayoutContainer:
+                Width: =150
+                Height: =90
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutJustifyContent: =LayoutJustifyContent.Center
+                
+                Label_RFPCount As label:
+                    Text: ="3"
+                    Color: =RGBA(0, 120, 212, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =24
+                    FontWeight: =FontWeight.Bold
+                    Align: =Align.Center
+                    
+                Label_RFPLabel As label:
+                    Text: ="Active RFPs"
+                    Color: =RGBA(100, 100, 100, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =12
+                    Align: =Align.Center
+            
+            Container_ProjectCount As groupContainer.verticalAutoLayoutContainer:
+                Width: =150
+                Height: =90
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutJustifyContent: =LayoutJustifyContent.Center
+                
+                Label_ProjectCount As label:
+                    Text: ="3"
+                    Color: =RGBA(40, 167, 69, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =24
+                    FontWeight: =FontWeight.Bold
+                    Align: =Align.Center
+                    
+                Label_ProjectLabel As label:
+                    Text: ="Active Projects"
+                    Color: =RGBA(100, 100, 100, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =12
+                    Align: =Align.Center
+            
+            Container_TaskCount As groupContainer.verticalAutoLayoutContainer:
+                Width: =150
+                Height: =90
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutJustifyContent: =LayoutJustifyContent.Center
+                
+                Label_TaskCount As label:
+                    Text: ="2"
+                    Color: =RGBA(255, 193, 7, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =24
+                    FontWeight: =FontWeight.Bold
+                    Align: =Align.Center
+                    
+                Label_TaskLabel As label:
+                    Text: ="Tasks In Progress"
+                    Color: =RGBA(100, 100, 100, 1)
+                    Font: =Font.'Segoe UI'
+                    FontSize: =12
+                    Align: =Align.Center

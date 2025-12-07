@@ -1,6 +1,7 @@
 App As appinfo:
     BackEnabled: =true
     Theme: =PowerAppsTheme
+    Fill: =RGBA(255, 255, 255, 1)
 
     Host As hostControl.DefaultHostControlVariant:
         OnCancel: =false
