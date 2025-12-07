@@ -3,3 +3,7 @@
 /[Cc]hecksum.json
 /[Hh]eader.json
 /[Aa]pp[Cc]hecker[Rr]esult.sarif
+
+## Build artifacts
+*.msapp
+test.msapp
