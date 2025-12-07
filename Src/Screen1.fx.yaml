@@ -1,0 +1,341 @@
+Screen1 As screen:
+    Fill: =varPalette.Background
+    LoadingSpinner: =LoadingSpinner.None
+    OnVisible: |
+        =Set(varActiveSection, "Dashboard")
+
+    Header As groupContainer.manualLayoutContainer:
+        Height: =90
+        Width: =Parent.Width
+        X: =0
+        Y: =0
+        Fill: =varPalette.Primary
+        LayoutMinHeight: =90
+        LayoutMinWidth: =640
+
+        AppTitle As label:
+            Text: ="Project Portfolio Manager"
+            X: =24
+            Y: =24
+            Width: =400
+            Height: =42
+            Align: =Align.Left
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =24
+
+        UserProfile As label:
+            Text: =varUserInitials
+            X: =Parent.Width - 72
+            Y: =20
+            Width: =48
+            Height: =48
+            Align: =Align.Center
+            BorderRadius: =24
+            Color: =varPalette.Primary
+            Fill: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =16
+            VerticalAlign: =VerticalAlign.Middle
+
+    NavBar As groupContainer.manualLayoutContainer:
+        Height: =64
+        Width: =Parent.Width
+        X: =0
+        Y: =90
+        Fill: =RGBA(255, 255, 255, 1)
+        BorderColor: =varPalette.Border
+        BorderThickness: =1
+
+        NavBtn_Dashboard As button:
+            Text: ="Dashboard"
+            X: =24
+            Y: =12
+            Width: =140
+            Height: =40
+            Fill: =If(varActiveSection = "Dashboard", varPalette.Primary, RGBA(255, 255, 255, 1))
+            Color: =If(varActiveSection = "Dashboard", RGBA(255, 255, 255, 1), varPalette.Text)
+            BorderRadius: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "Dashboard", FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: |
+                =Set(varActiveSection, "Dashboard");
+                Navigate(Screen1, ScreenTransition.None)
+
+        NavBtn_RFPs As button:
+            Text: ="RFPs"
+            X: =180
+            Y: =12
+            Width: =140
+            Height: =40
+            Fill: =If(varActiveSection = "RFPs", varPalette.Primary, RGBA(255, 255, 255, 1))
+            Color: =If(varActiveSection = "RFPs", RGBA(255, 255, 255, 1), varPalette.Text)
+            BorderRadius: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "RFPs", FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: |
+                =Set(varActiveSection, "RFPs");
+                Navigate(Screen_RFPs, ScreenTransition.None)
+
+        NavBtn_Projects As button:
+            Text: ="Projects"
+            X: =336
+            Y: =12
+            Width: =140
+            Height: =40
+            Fill: =If(varActiveSection = "Projects", varPalette.Primary, RGBA(255, 255, 255, 1))
+            Color: =If(varActiveSection = "Projects", RGBA(255, 255, 255, 1), varPalette.Text)
+            BorderRadius: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "Projects", FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: |
+                =Set(varActiveSection, "Projects");
+                Navigate(Screen_Projects, ScreenTransition.None)
+
+        NavBtn_Tasks As button:
+            Text: ="My Tasks"
+            X: =492
+            Y: =12
+            Width: =140
+            Height: =40
+            Fill: =If(varActiveSection = "Tasks", varPalette.Primary, RGBA(255, 255, 255, 1))
+            Color: =If(varActiveSection = "Tasks", RGBA(255, 255, 255, 1), varPalette.Text)
+            BorderRadius: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "Tasks", FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: |
+                =Set(varActiveSection, "Tasks");
+                Navigate(Screen_Tasks, ScreenTransition.None)
+
+    MainContent As groupContainer.manualLayoutContainer:
+        Height: =Parent.Height - 154
+        Width: =Parent.Width
+        X: =0
+        Y: =154
+        Fill: =varPalette.Background
+
+        PageTitle As label:
+            Text: ="Dashboard Overview"
+            X: =40
+            Y: =24
+            Width: =Parent.Width - 80
+            Height: =40
+            Align: =Align.Left
+            Color: =varPalette.Text
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =28
+
+        StatsCard_RFPs As groupContainer.manualLayoutContainer:
+            X: =40
+            Y: =90
+            Width: =300
+            Height: =140
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =varPalette.Border
+            BorderThickness: =1
+            BorderRadius: =8
+
+            StatsCard_RFPs_Icon As icon:
+                Icon: =Icon.DocumentApproval
+                X: =24
+                Y: =24
+                Width: =40
+                Height: =40
+                Color: =varPalette.Secondary
+
+            StatsCard_RFPs_Value As label:
+                Text: =Text(CountRows(Filter(colRFPs, Status <> "Completed" && Status <> "Cancelled")))
+                X: =80
+                Y: =20
+                Width: =196
+                Height: =48
+                Align: =Align.Left
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Size: =36
+
+            StatsCard_RFPs_Label As label:
+                Text: ="Active RFPs"
+                X: =24
+                Y: =80
+                Width: =252
+                Height: =32
+                Align: =Align.Left
+                Color: =ColorValue("#6B7280")
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+        StatsCard_Projects As groupContainer.manualLayoutContainer:
+            X: =368
+            Y: =90
+            Width: =300
+            Height: =140
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =varPalette.Border
+            BorderThickness: =1
+            BorderRadius: =8
+
+            StatsCard_Projects_Icon As icon:
+                Icon: =Icon.Folder
+                X: =24
+                Y: =24
+                Width: =40
+                Height: =40
+                Color: =varPalette.Accent
+
+            StatsCard_Projects_Value As label:
+                Text: =Text(CountRows(Filter(colProjects, Status <> "Closed")))
+                X: =80
+                Y: =20
+                Width: =196
+                Height: =48
+                Align: =Align.Left
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Size: =36
+
+            StatsCard_Projects_Label As label:
+                Text: ="Active Projects"
+                X: =24
+                Y: =80
+                Width: =252
+                Height: =32
+                Align: =Align.Left
+                Color: =ColorValue("#6B7280")
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+        StatsCard_Tasks As groupContainer.manualLayoutContainer:
+            X: =696
+            Y: =90
+            Width: =300
+            Height: =140
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =varPalette.Border
+            BorderThickness: =1
+            BorderRadius: =8
+
+            StatsCard_Tasks_Icon As icon:
+                Icon: =Icon.CheckboxComposite
+                X: =24
+                Y: =24
+                Width: =40
+                Height: =40
+                Color: =varPalette.Primary
+
+            StatsCard_Tasks_Value As label:
+                Text: =Text(CountRows(Filter(colTasks, Owner = varUser.FullName && Status <> "Completed")))
+                X: =80
+                Y: =20
+                Width: =196
+                Height: =48
+                Align: =Align.Left
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Size: =36
+
+            StatsCard_Tasks_Label As label:
+                Text: ="My Open Tasks"
+                X: =24
+                Y: =80
+                Width: =252
+                Height: =32
+                Align: =Align.Left
+                Color: =ColorValue("#6B7280")
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+        RecentActivity_Title As label:
+            Text: ="Recent Activity"
+            X: =40
+            Y: =260
+            Width: =300
+            Height: =32
+            Align: =Align.Left
+            Color: =varPalette.Text
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =20
+
+        RecentActivity_Gallery As gallery.galleryVertical:
+            Items: =FirstN(SortByColumns(colTasks, "DueDate", Ascending), 5)
+            X: =40
+            Y: =308
+            Width: =Parent.Width - 80
+            Height: =280
+            TemplatePadding: =8
+            TemplateSize: =64
+            BorderColor: =varPalette.Border
+            BorderThickness: =1
+            BorderRadius: =4
+            Fill: =RGBA(255, 255, 255, 1)
+
+            TaskItem_Container As groupContainer.manualLayoutContainer:
+                Height: =64
+                Width: =Parent.TemplateWidth - 16
+                Fill: =RGBA(255, 255, 255, 1)
+
+                TaskItem_StatusIcon As icon:
+                    Icon: =If(ThisItem.Status = "Completed", Icon.CheckboxComposite, Icon.CircleOutline)
+                    X: =16
+                    Y: =20
+                    Width: =24
+                    Height: =24
+                    Color: =If(ThisItem.Status = "Completed", ColorValue("#107C10"), varPalette.Primary)
+
+                TaskItem_Name As label:
+                    Text: =ThisItem.TaskName
+                    X: =56
+                    Y: =8
+                    Width: =Parent.Width - 320
+                    Height: =24
+                    Align: =Align.Left
+                    Color: =varPalette.Text
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Semibold
+                    Size: =13
+
+                TaskItem_Project As label:
+                    Text: =ThisItem.ProjectName
+                    X: =56
+                    Y: =32
+                    Width: =Parent.Width - 320
+                    Height: =20
+                    Align: =Align.Left
+                    Color: =ColorValue("#6B7280")
+                    Font: =Font.'Segoe UI'
+                    Size: =11
+
+                TaskItem_Priority As label:
+                    Text: =ThisItem.Priority
+                    X: =Parent.Width - 240
+                    Y: =16
+                    Width: =80
+                    Height: =32
+                    Align: =Align.Center
+                    BorderRadius: =4
+                    Color: =If(ThisItem.Priority = "High", RGBA(255, 255, 255, 1), varPalette.Text)
+                    Fill: =Switch(ThisItem.Priority, "High", ColorValue("#D13438"), "Medium", ColorValue("#FFB900"), "Low", ColorValue("#E1E7EF"))
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Semibold
+                    Size: =11
+                    PaddingTop: =8
+                    PaddingBottom: =8
+
+                TaskItem_DueDate As label:
+                    Text: =Text(ThisItem.DueDate, "mmm dd")
+                    X: =Parent.Width - 140
+                    Y: =20
+                    Width: =100
+                    Height: =24
+                    Align: =Align.Center
+                    Color: =ColorValue("#6B7280")
+                    Font: =Font.'Segoe UI'
+                    Size: =12
+
