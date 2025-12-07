@@ -1,5 +1,164 @@
 App As appinfo:
     BackEnabled: =true
+    OnStart: |
+        =// Set user context
+        Set(varUser, User());
+        
+        // Theme variables - Colors
+        Set(varColorPrimary, RGBA(0, 120, 212, 1));        // Blue
+        Set(varColorSecondary, RGBA(0, 176, 240, 1));      // Light Blue
+        Set(varColorAccent, RGBA(16, 110, 190, 1));        // Dark Blue
+        Set(varColorSuccess, RGBA(16, 124, 16, 1));        // Green
+        Set(varColorWarning, RGBA(255, 185, 0, 1));        // Amber
+        Set(varColorDanger, RGBA(196, 49, 75, 1));         // Red
+        Set(varColorBackground, RGBA(243, 242, 241, 1));   // Light Gray
+        Set(varColorSurface, RGBA(255, 255, 255, 1));      // White
+        Set(varColorText, RGBA(50, 49, 48, 1));            // Dark Gray
+        Set(varColorTextLight, RGBA(96, 94, 92, 1));       // Medium Gray
+        Set(varColorBorder, RGBA(225, 223, 221, 1));       // Border Gray
+        
+        // Theme variables - Typography
+        Set(varFontSizeSmall, 12);
+        Set(varFontSizeMedium, 14);
+        Set(varFontSizeLarge, 18);
+        Set(varFontSizeXLarge, 24);
+        Set(varFontFamily, "Segoe UI");
+        
+        // Theme variables - Spacing
+        Set(varSpacingSmall, 8);
+        Set(varSpacingMedium, 16);
+        Set(varSpacingLarge, 24);
+        
+        // Seed Status options collection
+        ClearCollect(
+            colStatusOptions,
+            {ID: 1, Status: "Not Started", Color: RGBA(96, 94, 92, 1)},
+            {ID: 2, Status: "In Progress", Color: RGBA(0, 120, 212, 1)},
+            {ID: 3, Status: "On Hold", Color: RGBA(255, 185, 0, 1)},
+            {ID: 4, Status: "Completed", Color: RGBA(16, 124, 16, 1)},
+            {ID: 5, Status: "Cancelled", Color: RGBA(196, 49, 75, 1)}
+        );
+        
+        // Seed RFPs collection
+        ClearCollect(
+            colRFPs,
+            {
+                ID: 1,
+                Title: "Website Redesign Project",
+                Client: "Contoso Ltd",
+                DueDate: Date(2024, 3, 15),
+                Budget: 50000,
+                StatusID: 2,
+                Priority: "High",
+                Description: "Complete redesign of corporate website with modern UI/UX"
+            },
+            {
+                ID: 2,
+                Title: "Mobile App Development",
+                Client: "Fabrikam Inc",
+                DueDate: Date(2024, 4, 30),
+                Budget: 75000,
+                StatusID: 1,
+                Priority: "Medium",
+                Description: "Native mobile app for iOS and Android platforms"
+            },
+            {
+                ID: 3,
+                Title: "Cloud Migration Services",
+                Client: "Adventure Works",
+                DueDate: Date(2024, 2, 28),
+                Budget: 120000,
+                StatusID: 2,
+                Priority: "High",
+                Description: "Migration of on-premises infrastructure to Azure cloud"
+            }
+        );
+        
+        // Seed Projects collection
+        ClearCollect(
+            colProjects,
+            {
+                ID: 1,
+                Name: "E-Commerce Platform",
+                Client: "Northwind Traders",
+                StartDate: Date(2024, 1, 15),
+                EndDate: Date(2024, 6, 30),
+                StatusID: 2,
+                Budget: 150000,
+                Progress: 35,
+                Manager: "Sarah Johnson"
+            },
+            {
+                ID: 2,
+                Name: "CRM Integration",
+                Client: "Wide World Importers",
+                StartDate: Date(2024, 2, 1),
+                EndDate: Date(2024, 5, 15),
+                StatusID: 2,
+                Budget: 85000,
+                Progress: 60,
+                Manager: "Michael Chen"
+            },
+            {
+                ID: 3,
+                Name: "Data Analytics Dashboard",
+                Client: "Tailspin Toys",
+                StartDate: Date(2023, 11, 1),
+                EndDate: Date(2024, 3, 31),
+                StatusID: 4,
+                Budget: 45000,
+                Progress: 100,
+                Manager: "Emily Rodriguez"
+            }
+        );
+        
+        // Seed Tasks collection
+        ClearCollect(
+            colTasks,
+            {
+                ID: 1,
+                Title: "Design mockups review",
+                ProjectID: 1,
+                AssignedTo: varUser.Email,
+                DueDate: Date(2024, 2, 10),
+                StatusID: 2,
+                Priority: "High",
+                EstimatedHours: 8
+            },
+            {
+                ID: 2,
+                Title: "API integration testing",
+                ProjectID: 2,
+                AssignedTo: varUser.Email,
+                DueDate: Date(2024, 2, 15),
+                StatusID: 1,
+                Priority: "Medium",
+                EstimatedHours: 16
+            },
+            {
+                ID: 3,
+                Title: "Client presentation prep",
+                ProjectID: 1,
+                AssignedTo: varUser.Email,
+                DueDate: Date(2024, 2, 8),
+                StatusID: 3,
+                Priority: "High",
+                EstimatedHours: 4
+            },
+            {
+                ID: 4,
+                Title: "Documentation update",
+                ProjectID: 3,
+                AssignedTo: varUser.Email,
+                DueDate: Date(2024, 2, 20),
+                StatusID: 4,
+                Priority: "Low",
+                EstimatedHours: 6
+            }
+        );
+        
+        // Initialize navigation context
+        Set(varActiveSection, "RFPs");
     Theme: =PowerAppsTheme
 
     Host As hostControl.DefaultHostControlVariant:

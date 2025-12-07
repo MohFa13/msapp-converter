@@ -1,0 +1,205 @@
+Screen1 As screen:
+    Fill: =varColorBackground
+    LoadingSpinner: =LoadingSpinner.None
+    LoadingSpinnerColor: =varColorPrimary
+
+    HeaderContainer As groupContainer.horizontalAutoLayoutContainer:
+        AlignInContainer: =AlignInContainer.SetByContainer
+        DropShadow: =DropShadow.Light
+        Fill: =varColorSurface
+        Height: =80
+        LayoutMinHeight: =80
+        LayoutMinWidth: =250
+        RadiusBottomLeft: =0
+        RadiusBottomRight: =0
+        RadiusTopLeft: =0
+        RadiusTopRight: =0
+        Width: =Parent.Width
+        X: =0
+        Y: =0
+        ZIndex: =1
+
+        HeaderLabel As label:
+            Align: =Align.Left
+            AlignInContainer: =AlignInContainer.Center
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =varColorText
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =50
+            PaddingBottom: =0
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingMedium
+            PaddingTop: =0
+            Size: =varFontSizeXLarge
+            Text: ="RFP Management System"
+            Width: =400
+            ZIndex: =1
+
+        NavButtonRFPs As button:
+            AlignInContainer: =AlignInContainer.Center
+            BorderColor: =If(varActiveSection = "RFPs", varColorPrimary, varColorBorder)
+            BorderThickness: =If(varActiveSection = "RFPs", 0, 0)
+            Color: =If(varActiveSection = "RFPs", varColorSurface, varColorText)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            DisabledFill: =RGBA(204, 204, 204, 1)
+            Fill: =If(varActiveSection = "RFPs", varColorPrimary, RGBA(0, 0, 0, 0))
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "RFPs", FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            HoverBorderColor: =varColorPrimary
+            HoverColor: =If(varActiveSection = "RFPs", varColorSurface, varColorPrimary)
+            HoverFill: =If(varActiveSection = "RFPs", varColorPrimary, RGBA(243, 242, 241, 1))
+            OnSelect: |
+                =Set(varActiveSection, "RFPs");
+                Navigate(Screen1, ScreenTransition.None);
+            PaddingBottom: =varSpacingSmall
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingLarge
+            PaddingTop: =varSpacingSmall
+            PressedBorderColor: =varColorPrimary
+            PressedColor: =varColorSurface
+            PressedFill: =varColorAccent
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Size: =varFontSizeMedium
+            Text: ="RFPs"
+            Width: =150
+            ZIndex: =2
+
+        NavButtonProjects As button:
+            AlignInContainer: =AlignInContainer.Center
+            BorderColor: =If(varActiveSection = "Projects", varColorPrimary, varColorBorder)
+            BorderThickness: =If(varActiveSection = "Projects", 0, 0)
+            Color: =If(varActiveSection = "Projects", varColorSurface, varColorText)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            DisabledFill: =RGBA(204, 204, 204, 1)
+            Fill: =If(varActiveSection = "Projects", varColorPrimary, RGBA(0, 0, 0, 0))
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "Projects", FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            HoverBorderColor: =varColorPrimary
+            HoverColor: =If(varActiveSection = "Projects", varColorSurface, varColorPrimary)
+            HoverFill: =If(varActiveSection = "Projects", varColorPrimary, RGBA(243, 242, 241, 1))
+            OnSelect: |
+                =Set(varActiveSection, "Projects");
+                Navigate(ProjectsScreen, ScreenTransition.None);
+            PaddingBottom: =varSpacingSmall
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingLarge
+            PaddingTop: =varSpacingSmall
+            PressedBorderColor: =varColorPrimary
+            PressedColor: =varColorSurface
+            PressedFill: =varColorAccent
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Size: =varFontSizeMedium
+            Text: ="Projects"
+            Width: =150
+            ZIndex: =3
+
+        NavButtonTasks As button:
+            AlignInContainer: =AlignInContainer.Center
+            BorderColor: =If(varActiveSection = "Tasks", varColorPrimary, varColorBorder)
+            BorderThickness: =If(varActiveSection = "Tasks", 0, 0)
+            Color: =If(varActiveSection = "Tasks", varColorSurface, varColorText)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            DisabledFill: =RGBA(204, 204, 204, 1)
+            Fill: =If(varActiveSection = "Tasks", varColorPrimary, RGBA(0, 0, 0, 0))
+            Font: =Font.'Segoe UI'
+            FontWeight: =If(varActiveSection = "Tasks", FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            HoverBorderColor: =varColorPrimary
+            HoverColor: =If(varActiveSection = "Tasks", varColorSurface, varColorPrimary)
+            HoverFill: =If(varActiveSection = "Tasks", varColorPrimary, RGBA(243, 242, 241, 1))
+            OnSelect: |
+                =Set(varActiveSection, "Tasks");
+                Navigate(MyTasksScreen, ScreenTransition.None);
+            PaddingBottom: =varSpacingSmall
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingLarge
+            PaddingTop: =varSpacingSmall
+            PressedBorderColor: =varColorPrimary
+            PressedColor: =varColorSurface
+            PressedFill: =varColorAccent
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Size: =varFontSizeMedium
+            Text: ="My Tasks"
+            Width: =150
+            ZIndex: =4
+
+        UserInfoLabel As label:
+            Align: =Align.Right
+            AlignInContainer: =AlignInContainer.Center
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =varColorTextLight
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            Height: =40
+            PaddingBottom: =0
+            PaddingLeft: =varSpacingMedium
+            PaddingRight: =varSpacingLarge
+            PaddingTop: =0
+            Size: =varFontSizeSmall
+            Text: ="Welcome, " & varUser.FullName
+            Width: =300
+            X: =Parent.Width - Self.Width - varSpacingMedium
+            ZIndex: =5
+
+    BodyContainer As groupContainer.verticalAutoLayoutContainer:
+        AlignInContainer: =AlignInContainer.SetByContainer
+        Fill: =varColorBackground
+        Height: =Parent.Height - HeaderContainer.Height
+        LayoutMinHeight: =100
+        LayoutMinWidth: =250
+        Width: =Parent.Width
+        X: =0
+        Y: =HeaderContainer.Height
+        ZIndex: =2
+
+        ContentLabel As label:
+            AlignInContainer: =AlignInContainer.SetByContainer
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =varColorText
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =60
+            PaddingBottom: =varSpacingMedium
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingMedium
+            PaddingTop: =varSpacingLarge
+            Size: =varFontSizeLarge
+            Text: ="RFPs"
+            Width: =Parent.Width
+            ZIndex: =1
+
+        InfoLabel As label:
+            AlignInContainer: =AlignInContainer.SetByContainer
+            BorderColor: =RGBA(0, 0, 0, 0)
+            Color: =varColorTextLight
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            Height: =80
+            PaddingBottom: =varSpacingMedium
+            PaddingLeft: =varSpacingLarge
+            PaddingRight: =varSpacingLarge
+            PaddingTop: =varSpacingMedium
+            Size: =varFontSizeMedium
+            Text: ="Total RFPs: " & CountRows(colRFPs) & " | Active: " & CountRows(Filter(colRFPs, StatusID = 2))
+            Width: =Parent.Width
+            ZIndex: =2
+

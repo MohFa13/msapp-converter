@@ -8,7 +8,9 @@
     "Host": 3,
     "MainContainer1": 7,
     "Screen1": 4,
-    "ScreenContainer1": 5
+    "ScreenContainer1": 5,
+    "ProjectsScreen": 9,
+    "MyTasksScreen": 10
   },
   "FunctionParamsInvariantScripts": {},
   "FunctionParamsInvariantScriptsOnInstances": {},
@@ -34,7 +36,9 @@
     "Host": {},
     "MainContainer1": {},
     "Screen1": {},
-    "ScreenContainer1": {}
+    "ScreenContainer1": {},
+    "ProjectsScreen": {},
+    "MyTasksScreen": {}
   },
   "PCFDynamicSchemaForIRRetrievalEntry": {},
   "PCFTemplateEntry": {},
@@ -45,7 +49,9 @@
     "Host": 0,
     "MainContainer1": 2,
     "Screen1": 0,
-    "ScreenContainer1": 0
+    "ScreenContainer1": 0,
+    "ProjectsScreen": 1,
+    "MyTasksScreen": 2
   },
   "ResourcesJsonIndices": {},
   "RuleScreenIdWithoutScreen": {},

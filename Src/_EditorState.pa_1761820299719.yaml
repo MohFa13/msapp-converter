@@ -9,3 +9,5 @@
 EditorState:
   ScreensOrder:
     - Screen1
+    - ProjectsScreen
+    - MyTasksScreen
