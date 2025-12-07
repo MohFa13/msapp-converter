@@ -6,9 +6,6 @@
 # 
 # For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
 # ************************************************************************************************
-EditorState:
-  ScreensOrder:
-    - Screen1
-    - Screen_RFPs
-    - Screen_Projects
-    - Screen_Tasks
+Screen_Tasks:
+  ZIndex: 4
+

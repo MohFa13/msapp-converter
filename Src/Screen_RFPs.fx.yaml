@@ -1,0 +1,534 @@
+Screen_RFPs As screen:
+    Fill: =varPalette.Background
+    LoadingSpinner: =LoadingSpinner.Data
+    OnVisible: |
+        =Set(varActiveSection, "RFPs");
+        UpdateContext(
+            {
+                locRFPMode: "View",
+                locRFPRecord: If(
+                    CountRows(colRFPs) > 0,
+                    First(colRFPs),
+                    {
+                        ID: GUID(),
+                        Title: "",
+                        Client: "",
+                        Owner: varUser.FullName,
+                        Status: "Open",
+                        DueDate: Today(),
+                        Budget: 0,
+                        Summary: ""
+                    }
+                )
+            }
+        )
+
+    LayoutRoot As groupContainer.verticalAutoLayoutContainer:
+        Width: =Parent.Width
+        Height: =Parent.Height
+        LayoutMode: =LayoutMode.Auto
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutGap: =16
+        PaddingLeft: =32
+        PaddingRight: =32
+        PaddingTop: =24
+        PaddingBottom: =24
+
+        HeaderBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Start
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =80
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =12
+            PaddingBottom: =12
+            Width: =Parent.Width - 64
+
+            HeaderContent As groupContainer.verticalAutoLayoutContainer:
+                LayoutMinWidth: =200
+                Width: =Parent.Width * 0.7
+                LayoutGap: =4
+
+                HeaderTitle As label:
+                    Text: ="Request For Proposal Workspace"
+                    Align: =Align.Left
+                    Color: =varPalette.Text
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Semibold
+                    Size: =24
+                    Width: =Parent.Width
+
+                HeaderSubtitle As label:
+                    Text: ="Track sourcing activity, collaborators, and submission readiness."
+                    Align: =Align.Left
+                    Color: =ColorValue("#6B7280")
+                    Font: =Font.'Segoe UI'
+                    Size: =13
+                    Width: =Parent.Width
+
+            HeaderBadge As label:
+                Align: =Align.Center
+                Color: =varPalette.Primary
+                Fill: =ColorFade(varPalette.Primary, 0.8)
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                PaddingLeft: =16
+                PaddingRight: =16
+                Text: ="Active " & CountRows(Filter(colRFPs, Status <> "Completed" && Status <> "Cancelled")) & " RFPs"
+                VerticalAlign: =VerticalAlign.Middle
+                Width: =200
+
+        FilterBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =72
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            PaddingBottom: =16
+            Width: =Parent.Width - 64
+
+            txtRFPQuery As text:
+                Default: =""
+                HintText: ="Search by title, client, owner"
+                Width: =Parent.Width * 0.4
+                BorderColor: =varPalette.Border
+                Clear: =true
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                PaddingLeft: =12
+                Size: =14
+
+            ddRFPStatus As dropdown:
+                Default: ="All"
+                Items: =["All", "Open", "In Progress", "On Hold", "Completed", "Cancelled"]
+                Width: =200
+                BorderColor: =varPalette.Border
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+            btnRFPReset As button:
+                Align: =Align.Center
+                Color: =varPalette.Primary
+                Fill: =ColorValue("#E0ECFF")
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                OnSelect: =Reset(txtRFPQuery); Reset(ddRFPStatus)
+                Text: ="Clear Filters"
+                Width: =160
+
+        ContentRow As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            FillPortions: =1
+            LayoutAlignItems: =LayoutAlignItems.Start
+            LayoutJustifyContent: =LayoutJustifyContent.Stretch
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =16
+            Width: =Parent.Width - 64
+            Height: =Parent.Height - HeaderBar.Height - FilterBar.Height - 120
+
+            RFPListPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                Fill: =RGBA(255, 255, 255, 1)
+                PaddingLeft: =16
+                PaddingRight: =16
+                PaddingTop: =16
+                PaddingBottom: =16
+
+                RFPListHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+                    AlignInContainer: =AlignInContainer.Stretch
+
+                    lblRFPListTitle As label:
+                        Text: ="Pipeline"
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =18
+                        Width: =200
+
+                    btnAddRFP As button:
+                        Text: ="New"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        FontWeight: =FontWeight.Semibold
+                        OnSelect: =UpdateContext({locRFPMode: "New", locRFPRecord: {ID: GUID(), Title: "", Client: "", Owner: varUser.FullName, Status: "Open", DueDate: Today(), Budget: 0, Summary: ""}})
+
+                    btnEditRFP As button:
+                        Text: ="Edit"
+                        Fill: =varPalette.Secondary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locRFPRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locRFPRecord), UpdateContext({locRFPMode: "Edit"}))
+
+                    btnDeleteRFP As button:
+                        Text: ="Delete"
+                        Fill: =ColorValue("#FDE7E9")
+                        Color: =ColorValue("#C50F1F")
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locRFPRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locRFPRecord), Remove(colRFPs, locRFPRecord); UpdateContext({locRFPRecord: If(CountRows(colRFPs) > 0, First(colRFPs), Blank()), locRFPMode: "View"}))
+
+                galRFPs As gallery.galleryVertical:
+                    Fill: =RGBA(255, 255, 255, 1)
+                    Items: =SortByColumns(
+                        Filter(
+                            colRFPs,
+                            (IsBlank(txtRFPQuery.Text) || StartsWith(Title, txtRFPQuery.Text) || StartsWith(Client, txtRFPQuery.Text) || StartsWith(Owner, txtRFPQuery.Text)) &&
+                            (ddRFPStatus.Selected.Value = "All" || Status = ddRFPStatus.Selected.Value)
+                        ),
+                        "DueDate",
+                        Ascending
+                    )
+                    Layout: =Layout.Vertical
+                    TemplatePadding: =8
+                    TemplateSize: =104
+                    BorderThickness: =0
+                    OnSelect: =UpdateContext({locRFPMode: "View", locRFPRecord: ThisItem})
+
+                    RFPCard As groupContainer.manualLayoutContainer:
+                        Width: =Parent.TemplateWidth - 16
+                        Height: =96
+                        Fill: =If(ThisItem.ID = locRFPRecord.ID, ColorValue("#E3F2FD"), RGBA(247, 249, 255, 1))
+                        BorderColor: =varPalette.Border
+                        BorderThickness: =1
+                        BorderRadius: =6
+
+                        lblRFPCardTitle As label:
+                            Text: =ThisItem.Title
+                            X: =16
+                            Y: =12
+                            Width: =Parent.Width - 220
+                            Height: =28
+                            Align: =Align.Left
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Size: =15
+
+                        lblRFPClient As label:
+                            Text: =ThisItem.Client
+                            X: =16
+                            Y: =44
+                            Width: =Parent.Width - 220
+                            Height: =24
+                            Align: =Align.Left
+                            Color: =ColorValue("#6B7280")
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        lblRFPDueDate As label:
+                            Text: ="Due " & Text(ThisItem.DueDate, "mmm dd")
+                            X: =Parent.Width - 180
+                            Y: =16
+                            Width: =80
+                            Height: =24
+                            Align: =Align.Right
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        lblRFPBudget As label:
+                            Text: =Text(ThisItem.Budget, "$#,###")
+                            X: =Parent.Width - 180
+                            Y: =40
+                            Width: =80
+                            Height: =24
+                            Align: =Align.Right
+                            Color: =ColorValue("#6B7280")
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        lblRFPStatus As label:
+                            Text: =ThisItem.Status
+                            X: =Parent.Width - 96
+                            Y: =28
+                            Width: =72
+                            Height: =28
+                            Align: =Align.Center
+                            BorderRadius: =20
+                            Fill: =LookUp(colStatusOptions, Value = ThisItem.Status, Color)
+                            Color: =RGBA(255, 255, 255, 1)
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Size: =11
+
+            RFPFormPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                Fill: =RGBA(255, 255, 255, 1)
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                PaddingLeft: =20
+                PaddingRight: =20
+                PaddingTop: =20
+                PaddingBottom: =20
+
+                FormHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    lblRFPFormTitle As label:
+                        Text: =If(locRFPMode = "New", "Create RFP", If(locRFPMode = "Edit", "Edit RFP", "Details"))
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =20
+                        Width: =200
+
+                    ModePill As label:
+                        Text: =locRFPMode
+                        Align: =Align.Center
+                        BorderRadius: =12
+                        Color: =varPalette.Primary
+                        Fill: =ColorValue("#E0ECFF")
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =100
+
+                RFPFormFields As groupContainer.verticalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+
+                    RFPRow1 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        RFPField_Title As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblTitleField As label:
+                                Text: ="Title"
+                                X: =0
+                                Y: =0
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiRFPTitle As text:
+                                Default: =Coalesce(locRFPRecord.Title, "")
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: ="e.g., ERP Modernization"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                        RFPField_Client As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblClientField As label:
+                                Text: ="Client"
+                                X: =0
+                                Y: =0
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiRFPClient As text:
+                                Default: =Coalesce(locRFPRecord.Client, "")
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: ="Contoso Retail"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                    RFPRow2 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        RFPField_Owner As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblOwnerField As label:
+                                Text: ="Owner"
+                                X: =0
+                                Y: =0
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiRFPOwner As text:
+                                Default: =Coalesce(locRFPRecord.Owner, varUser.FullName)
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: =varUser.FullName
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                        RFPField_Status As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblStatusField As label:
+                                Text: ="Status"
+                                X: =0
+                                Y: =0
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            ddRFPStatusField As dropdown:
+                                Default: =Coalesce(locRFPRecord.Status, "Open")
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Items: =colStatusOptions
+                                Value: ="Value"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                    RFPRow3 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        RFPField_DueDate As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblDueDateField As label:
+                                Text: ="Due Date"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            dpRFPDueDate As datePicker:
+                                DefaultDate: =Coalesce(locRFPRecord.DueDate, Today())
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                        RFPField_Budget As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblBudgetField As label:
+                                Text: ="Budget"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiRFPBudget As text:
+                                Default: =Text(Coalesce(locRFPRecord.Budget, 0))
+                                DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Format: =TextFormat.Number
+                                HintText: ="0"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                    RFPField_Summary As groupContainer.manualLayoutContainer:
+                        Height: =140
+                        Width: =Parent.Width
+
+                        lblSummaryField As label:
+                            Text: ="Summary"
+                            Width: =Parent.Width
+                            Height: =24
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        tiRFPSummary As text:
+                            Default: =Coalesce(locRFPRecord.Summary, "")
+                            DisplayMode: =If(locRFPMode = "View", DisplayMode.View, DisplayMode.Edit)
+                            Mode: =TextMode.MultiLine
+                            X: =0
+                            Y: =32
+                            Width: =Parent.Width
+                            Height: =96
+                            BorderColor: =varPalette.Border
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            PaddingLeft: =10
+                            Size: =13
+
+                RFPActionRow As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    btnSaveRFP As button:
+                        Text: ="Save"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =140
+                        Height: =44
+                        DisplayMode: =If(locRFPMode = "View", DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(locRFPMode <> "View", With({recordToSave: {ID: Coalesce(locRFPRecord.ID, GUID()), Title: Trim(tiRFPTitle.Text), Client: Trim(tiRFPClient.Text), Owner: Trim(tiRFPOwner.Text), Status: Coalesce(ddRFPStatusField.Selected.Value, "Open"), DueDate: dpRFPDueDate.SelectedDate, Budget: Max(0, Value(tiRFPBudget.Text)), Summary: tiRFPSummary.Text}}, If(locRFPMode = "Edit" || !IsBlank(LookUp(colRFPs, ID = recordToSave.ID)), Patch(colRFPs, LookUp(colRFPs, ID = recordToSave.ID), recordToSave), Collect(colRFPs, recordToSave)); UpdateContext({locRFPMode: "View", locRFPRecord: recordToSave})))
+
+                    btnCancelRFP As button:
+                        Text: ="Cancel"
+                        Fill: =ColorValue("#F3F4F6")
+                        Color: =varPalette.Text
+                        Width: =140
+                        Height: =44
+                        OnSelect: =UpdateContext({locRFPMode: "View", locRFPRecord: If(IsBlank(galRFPs.Selected), locRFPRecord, galRFPs.Selected)})
+

@@ -1,0 +1,594 @@
+Screen_Projects As screen:
+    Fill: =varPalette.Background
+    LoadingSpinner: =LoadingSpinner.Data
+    OnVisible: |
+        =Set(varActiveSection, "Projects");
+        UpdateContext(
+            {
+                locProjectMode: "View",
+                locProjectRecord: If(CountRows(colProjects) > 0, First(colProjects), {ID: GUID(), ProjectName: "", Client: "", Owner: varUser.FullName, Status: "Discovery", StartDate: Today(), EndDate: DateAdd(Today(), 90), Budget: 0, TeamMembers: varUser.FullName, Progress: 0, Summary: ""})
+            }
+        )
+
+    LayoutRoot As groupContainer.verticalAutoLayoutContainer:
+        Width: =Parent.Width
+        Height: =Parent.Height
+        LayoutMode: =LayoutMode.Auto
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutGap: =16
+        PaddingLeft: =32
+        PaddingRight: =32
+        PaddingTop: =24
+        PaddingBottom: =24
+
+        HeaderBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Start
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =80
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =12
+            PaddingBottom: =12
+            Width: =Parent.Width - 64
+
+            HeaderContent As groupContainer.verticalAutoLayoutContainer:
+                LayoutMinWidth: =200
+                Width: =Parent.Width * 0.7
+                LayoutGap: =4
+
+                HeaderTitle As label:
+                    Text: ="Project Portfolio"
+                    Align: =Align.Left
+                    Color: =varPalette.Text
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Semibold
+                    Size: =24
+                    Width: =Parent.Width
+
+                HeaderSubtitle As label:
+                    Text: ="Active delivery engagements with progress tracking and team assignments."
+                    Align: =Align.Left
+                    Color: =ColorValue("#6B7280")
+                    Font: =Font.'Segoe UI'
+                    Size: =13
+                    Width: =Parent.Width
+
+            HeaderBadge As label:
+                Align: =Align.Center
+                Color: =varPalette.Accent
+                Fill: =ColorFade(varPalette.Accent, 0.8)
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                PaddingLeft: =16
+                PaddingRight: =16
+                Text: =CountRows(Filter(colProjects, Status <> "Closed")) & " Active"
+                VerticalAlign: =VerticalAlign.Middle
+                Width: =200
+
+        FilterBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =72
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            PaddingBottom: =16
+            Width: =Parent.Width - 64
+
+            txtProjectQuery As text:
+                Default: =""
+                HintText: ="Search by project, client, or owner"
+                Width: =Parent.Width * 0.4
+                BorderColor: =varPalette.Border
+                Clear: =true
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                PaddingLeft: =12
+                Size: =14
+
+            ddProjectStatusFilter As dropdown:
+                Default: ="All"
+                Items: =["All", "Discovery", "Planning", "Execution", "Closed"]
+                Width: =200
+                BorderColor: =varPalette.Border
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+            btnProjectReset As button:
+                Align: =Align.Center
+                Color: =varPalette.Primary
+                Fill: =ColorValue("#E0ECFF")
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                OnSelect: =Reset(txtProjectQuery); Reset(ddProjectStatusFilter)
+                Text: ="Clear Filters"
+                Width: =160
+
+        ContentRow As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            FillPortions: =1
+            LayoutAlignItems: =LayoutAlignItems.Start
+            LayoutJustifyContent: =LayoutJustifyContent.Stretch
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =16
+            Width: =Parent.Width - 64
+            Height: =Parent.Height - HeaderBar.Height - FilterBar.Height - 120
+
+            ProjectListPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                Fill: =RGBA(255, 255, 255, 1)
+                PaddingLeft: =16
+                PaddingRight: =16
+                PaddingTop: =16
+                PaddingBottom: =16
+
+                ProjectListHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+                    AlignInContainer: =AlignInContainer.Stretch
+
+                    lblProjectListTitle As label:
+                        Text: ="Portfolio"
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =18
+                        Width: =200
+
+                    btnAddProject As button:
+                        Text: ="New"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        FontWeight: =FontWeight.Semibold
+                        OnSelect: =UpdateContext({locProjectMode: "New", locProjectRecord: {ID: GUID(), ProjectName: "", Client: "", Owner: varUser.FullName, Status: "Discovery", StartDate: Today(), EndDate: DateAdd(Today(), 90), Budget: 0, TeamMembers: varUser.FullName, Progress: 0, Summary: ""}})
+
+                    btnEditProject As button:
+                        Text: ="Edit"
+                        Fill: =varPalette.Secondary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locProjectRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locProjectRecord), UpdateContext({locProjectMode: "Edit"}))
+
+                    btnDeleteProject As button:
+                        Text: ="Delete"
+                        Fill: =ColorValue("#FDE7E9")
+                        Color: =ColorValue("#C50F1F")
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locProjectRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locProjectRecord), Remove(colProjects, locProjectRecord); UpdateContext({locProjectRecord: If(CountRows(colProjects) > 0, First(colProjects), Blank()), locProjectMode: "View"}))
+
+                galProjects As gallery.galleryVertical:
+                    Fill: =RGBA(255, 255, 255, 1)
+                    Items: =SortByColumns(
+                        Filter(
+                            colProjects,
+                            (IsBlank(txtProjectQuery.Text) || StartsWith(ProjectName, txtProjectQuery.Text) || StartsWith(Client, txtProjectQuery.Text) || StartsWith(Owner, txtProjectQuery.Text)) &&
+                            (ddProjectStatusFilter.Selected.Value = "All" || Status = ddProjectStatusFilter.Selected.Value)
+                        ),
+                        "StartDate",
+                        Descending
+                    )
+                    Layout: =Layout.Vertical
+                    TemplatePadding: =8
+                    TemplateSize: =120
+                    BorderThickness: =0
+                    OnSelect: =UpdateContext({locProjectMode: "View", locProjectRecord: ThisItem})
+
+                    ProjectCard As groupContainer.manualLayoutContainer:
+                        Width: =Parent.TemplateWidth - 16
+                        Height: =112
+                        Fill: =If(ThisItem.ID = locProjectRecord.ID, ColorValue("#EDF7F2"), RGBA(247, 249, 255, 1))
+                        BorderColor: =varPalette.Border
+                        BorderThickness: =1
+                        BorderRadius: =6
+
+                        lblProjectCardTitle As label:
+                            Text: =ThisItem.ProjectName
+                            X: =16
+                            Y: =12
+                            Width: =Parent.Width - 140
+                            Height: =28
+                            Align: =Align.Left
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Size: =15
+
+                        lblProjectClient As label:
+                            Text: =ThisItem.Client
+                            X: =16
+                            Y: =44
+                            Width: =Parent.Width - 140
+                            Height: =24
+                            Align: =Align.Left
+                            Color: =ColorValue("#6B7280")
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        lblProjectProgress As label:
+                            Text: =ThisItem.Progress & "%"
+                            X: =Parent.Width - 100
+                            Y: =16
+                            Width: =80
+                            Height: =24
+                            Align: =Align.Right
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Bold
+                            Size: =18
+
+                        ProjectProgressBar As rectangle:
+                            X: =16
+                            Y: =76
+                            Width: =Parent.Width - 32
+                            Height: =8
+                            Fill: =ColorValue("#E1E7EF")
+                            BorderColor: =RGBA(0, 0, 0, 0)
+                            BorderRadius: =4
+
+                        ProjectProgressFill As rectangle:
+                            X: =16
+                            Y: =76
+                            Width: =Max(1, (Parent.Width - 32) * (ThisItem.Progress / 100))
+                            Height: =8
+                            Fill: =varPalette.Accent
+                            BorderColor: =RGBA(0, 0, 0, 0)
+                            BorderRadius: =4
+
+            ProjectFormPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                Fill: =RGBA(255, 255, 255, 1)
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                PaddingLeft: =20
+                PaddingRight: =20
+                PaddingTop: =20
+                PaddingBottom: =20
+
+                FormHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    lblProjectFormTitle As label:
+                        Text: =If(locProjectMode = "New", "Create Project", If(locProjectMode = "Edit", "Edit Project", "Details"))
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =20
+                        Width: =200
+
+                    ModePill As label:
+                        Text: =locProjectMode
+                        Align: =Align.Center
+                        BorderRadius: =12
+                        Color: =varPalette.Primary
+                        Fill: =ColorValue("#E0ECFF")
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =100
+
+                ProjectFormFields As groupContainer.verticalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+
+                    ProjectRow1 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        ProjectField_Name As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblNameField As label:
+                                Text: ="Project Name"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiProjectName As text:
+                                Default: =Coalesce(locProjectRecord.ProjectName, "")
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: ="e.g., ERP Modernization"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                        ProjectField_Client As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblClientField As label:
+                                Text: ="Client"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiProjectClient As text:
+                                Default: =Coalesce(locProjectRecord.Client, "")
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: ="Contoso Retail"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                    ProjectRow2 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        ProjectField_Owner As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblOwnerField As label:
+                                Text: ="Owner"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiProjectOwner As text:
+                                Default: =Coalesce(locProjectRecord.Owner, varUser.FullName)
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: =varUser.FullName
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                        ProjectField_Status As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblStatusField As label:
+                                Text: ="Status"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            ddProjectStatusField As dropdown:
+                                Default: =Coalesce(locProjectRecord.Status, "Discovery")
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Items: =["Discovery", "Planning", "Execution", "Closed"]
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                    ProjectRow3 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        ProjectField_StartDate As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblStartDateField As label:
+                                Text: ="Start Date"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            dpProjectStartDate As datePicker:
+                                DefaultDate: =Coalesce(locProjectRecord.StartDate, Today())
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                        ProjectField_EndDate As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblEndDateField As label:
+                                Text: ="End Date"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            dpProjectEndDate As datePicker:
+                                DefaultDate: =Coalesce(locProjectRecord.EndDate, DateAdd(Today(), 90))
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                    ProjectRow4 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        ProjectField_Budget As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblBudgetField As label:
+                                Text: ="Budget"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiProjectBudget As text:
+                                Default: =Text(Coalesce(locProjectRecord.Budget, 0))
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Format: =TextFormat.Number
+                                HintText: ="0"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                        ProjectField_Progress As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblProgressField As label:
+                                Text: ="Progress %"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            slProjectProgress As slider:
+                                Default: =Coalesce(locProjectRecord.Progress, 0)
+                                DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Min: =0
+                                Max: =100
+                                X: =0
+                                Y: =40
+                                Width: =Parent.Width - 60
+                                Height: =32
+
+                            lblProgressValue As label:
+                                Text: =Round(slProjectProgress.Value, 0) & "%"
+                                X: =Parent.Width - 52
+                                Y: =36
+                                Width: =52
+                                Height: =40
+                                Align: =Align.Center
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                FontWeight: =FontWeight.Semibold
+                                Size: =14
+
+                    ProjectField_Team As groupContainer.manualLayoutContainer:
+                        Height: =88
+                        Width: =Parent.Width
+
+                        lblTeamField As label:
+                            Text: ="Team Members"
+                            Width: =Parent.Width
+                            Height: =24
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        tiProjectTeam As text:
+                            Default: =Coalesce(locProjectRecord.TeamMembers, varUser.FullName)
+                            DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                            HintText: ="Comma-separated names"
+                            X: =0
+                            Y: =32
+                            Width: =Parent.Width
+                            Height: =48
+                            BorderColor: =varPalette.Border
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            PaddingLeft: =10
+                            Size: =13
+
+                    ProjectField_Summary As groupContainer.manualLayoutContainer:
+                        Height: =140
+                        Width: =Parent.Width
+
+                        lblSummaryField As label:
+                            Text: ="Summary"
+                            Width: =Parent.Width
+                            Height: =24
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        tiProjectSummary As text:
+                            Default: =Coalesce(locProjectRecord.Summary, "")
+                            DisplayMode: =If(locProjectMode = "View", DisplayMode.View, DisplayMode.Edit)
+                            Mode: =TextMode.MultiLine
+                            X: =0
+                            Y: =32
+                            Width: =Parent.Width
+                            Height: =96
+                            BorderColor: =varPalette.Border
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            PaddingLeft: =10
+                            Size: =13
+
+                ProjectActionRow As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    btnSaveProject As button:
+                        Text: ="Save"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =140
+                        Height: =44
+                        DisplayMode: =If(locProjectMode = "View", DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(locProjectMode <> "View", With({recordToSave: {ID: Coalesce(locProjectRecord.ID, GUID()), ProjectName: Trim(tiProjectName.Text), Client: Trim(tiProjectClient.Text), Owner: Trim(tiProjectOwner.Text), Status: Coalesce(ddProjectStatusField.Selected.Value, "Discovery"), StartDate: dpProjectStartDate.SelectedDate, EndDate: dpProjectEndDate.SelectedDate, Budget: Max(0, Value(tiProjectBudget.Text)), TeamMembers: tiProjectTeam.Text, Progress: Round(slProjectProgress.Value, 0), Summary: tiProjectSummary.Text}}, If(locProjectMode = "Edit" || !IsBlank(LookUp(colProjects, ID = recordToSave.ID)), Patch(colProjects, LookUp(colProjects, ID = recordToSave.ID), recordToSave), Collect(colProjects, recordToSave)); UpdateContext({locProjectMode: "View", locProjectRecord: recordToSave})))
+
+                    btnCancelProject As button:
+                        Text: ="Cancel"
+                        Fill: =ColorValue("#F3F4F6")
+                        Color: =varPalette.Text
+                        Width: =140
+                        Height: =44
+                        OnSelect: =UpdateContext({locProjectMode: "View", locProjectRecord: If(IsBlank(galProjects.Selected), locProjectRecord, galProjects.Selected)})
+

@@ -1,0 +1,528 @@
+Screen_Tasks As screen:
+    Fill: =varPalette.Background
+    LoadingSpinner: =LoadingSpinner.Data
+    OnVisible: |
+        =Set(varActiveSection, "Tasks");
+        UpdateContext(
+            {
+                locTaskMode: "View",
+                locTaskRecord: If(CountRows(colTasks) > 0, First(colTasks), {ID: GUID(), TaskName: "", ProjectName: "", Owner: varUser.FullName, Status: "Open", DueDate: Today(), Priority: "Medium", Notes: ""})
+            }
+        )
+
+    LayoutRoot As groupContainer.verticalAutoLayoutContainer:
+        Width: =Parent.Width
+        Height: =Parent.Height
+        LayoutMode: =LayoutMode.Auto
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutGap: =16
+        PaddingLeft: =32
+        PaddingRight: =32
+        PaddingTop: =24
+        PaddingBottom: =24
+
+        HeaderBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Start
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =80
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =12
+            PaddingBottom: =12
+            Width: =Parent.Width - 64
+
+            HeaderContent As groupContainer.verticalAutoLayoutContainer:
+                LayoutMinWidth: =200
+                Width: =Parent.Width * 0.7
+                LayoutGap: =4
+
+                HeaderTitle As label:
+                    Text: ="My Tasks"
+                    Align: =Align.Left
+                    Color: =varPalette.Text
+                    Font: =Font.'Segoe UI'
+                    FontWeight: =FontWeight.Semibold
+                    Size: =24
+                    Width: =Parent.Width
+
+                HeaderSubtitle As label:
+                    Text: ="Your personal task list, filtered by assignment and priority."
+                    Align: =Align.Left
+                    Color: =ColorValue("#6B7280")
+                    Font: =Font.'Segoe UI'
+                    Size: =13
+                    Width: =Parent.Width
+
+            HeaderBadge As label:
+                Align: =Align.Center
+                Color: =ColorValue("#D13438")
+                Fill: =ColorFade(ColorValue("#D13438"), 0.85)
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                PaddingLeft: =16
+                PaddingRight: =16
+                Text: =CountRows(Filter(colTasks, Owner = varUser.FullName && Status <> "Completed")) & " Open"
+                VerticalAlign: =VerticalAlign.Middle
+                Width: =200
+
+        FilterBar As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =72
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =12
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            PaddingBottom: =16
+            Width: =Parent.Width - 64
+
+            txtTaskQuery As text:
+                Default: =""
+                HintText: ="Search by task name or project"
+                Width: =Parent.Width * 0.35
+                BorderColor: =varPalette.Border
+                Clear: =true
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                PaddingLeft: =12
+                Size: =14
+
+            ddTaskStatus As dropdown:
+                Default: ="All"
+                Items: =["All", "Open", "In Progress", "On Hold", "Completed"]
+                Width: =180
+                BorderColor: =varPalette.Border
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+            ddTaskPriority As dropdown:
+                Default: ="All"
+                Items: =["All", "High", "Medium", "Low"]
+                Width: =140
+                BorderColor: =varPalette.Border
+                Color: =varPalette.Text
+                Font: =Font.'Segoe UI'
+                Size: =14
+
+            btnTaskReset As button:
+                Align: =Align.Center
+                Color: =varPalette.Primary
+                Fill: =ColorValue("#E0ECFF")
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Semibold
+                Height: =40
+                OnSelect: =Reset(txtTaskQuery); Reset(ddTaskStatus); Reset(ddTaskPriority)
+                Text: ="Clear"
+                Width: =120
+
+        ContentRow As groupContainer.horizontalAutoLayoutContainer:
+            AlignInContainer: =AlignInContainer.Stretch
+            FillPortions: =1
+            LayoutAlignItems: =LayoutAlignItems.Start
+            LayoutJustifyContent: =LayoutJustifyContent.Stretch
+            LayoutMode: =LayoutMode.Auto
+            LayoutGap: =16
+            Width: =Parent.Width - 64
+            Height: =Parent.Height - HeaderBar.Height - FilterBar.Height - 120
+
+            TaskListPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                Fill: =RGBA(255, 255, 255, 1)
+                PaddingLeft: =16
+                PaddingRight: =16
+                PaddingTop: =16
+                PaddingBottom: =16
+
+                TaskListHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+                    AlignInContainer: =AlignInContainer.Stretch
+
+                    lblTaskListTitle As label:
+                        Text: ="Task List"
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =18
+                        Width: =200
+
+                    btnAddTask As button:
+                        Text: ="New"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        FontWeight: =FontWeight.Semibold
+                        OnSelect: =UpdateContext({locTaskMode: "New", locTaskRecord: {ID: GUID(), TaskName: "", ProjectName: "", Owner: varUser.FullName, Status: "Open", DueDate: Today(), Priority: "Medium", Notes: ""}})
+
+                    btnEditTask As button:
+                        Text: ="Edit"
+                        Fill: =varPalette.Secondary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locTaskRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locTaskRecord), UpdateContext({locTaskMode: "Edit"}))
+
+                    btnDeleteTask As button:
+                        Text: ="Delete"
+                        Fill: =ColorValue("#FDE7E9")
+                        Color: =ColorValue("#C50F1F")
+                        Width: =90
+                        Height: =36
+                        DisplayMode: =If(IsBlank(locTaskRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locTaskRecord), Remove(colTasks, locTaskRecord); UpdateContext({locTaskRecord: If(CountRows(colTasks) > 0, First(colTasks), Blank()), locTaskMode: "View"}))
+
+                galTasks As gallery.galleryVertical:
+                    Fill: =RGBA(255, 255, 255, 1)
+                    Items: =SortByColumns(
+                        Filter(
+                            colTasks,
+                            Owner = varUser.FullName &&
+                            (IsBlank(txtTaskQuery.Text) || StartsWith(TaskName, txtTaskQuery.Text) || StartsWith(ProjectName, txtTaskQuery.Text)) &&
+                            (ddTaskStatus.Selected.Value = "All" || Status = ddTaskStatus.Selected.Value) &&
+                            (ddTaskPriority.Selected.Value = "All" || Priority = ddTaskPriority.Selected.Value)
+                        ),
+                        "DueDate",
+                        Ascending
+                    )
+                    Layout: =Layout.Vertical
+                    TemplatePadding: =8
+                    TemplateSize: =108
+                    BorderThickness: =0
+                    OnSelect: =UpdateContext({locTaskMode: "View", locTaskRecord: ThisItem})
+
+                    TaskCard As groupContainer.manualLayoutContainer:
+                        Width: =Parent.TemplateWidth - 16
+                        Height: =100
+                        Fill: =If(ThisItem.ID = locTaskRecord.ID, ColorValue("#FFF8E1"), RGBA(247, 249, 255, 1))
+                        BorderColor: =varPalette.Border
+                        BorderThickness: =1
+                        BorderRadius: =6
+
+                        TaskStatusCircle As circle:
+                            X: =16
+                            Y: =16
+                            Width: =24
+                            Height: =24
+                            Fill: =If(ThisItem.Status = "Completed", ColorValue("#107C10"), If(ThisItem.Status = "In Progress", ColorValue("#0078D4"), ColorValue("#FFB900")))
+
+                        lblTaskCardTitle As label:
+                            Text: =ThisItem.TaskName
+                            X: =52
+                            Y: =12
+                            Width: =Parent.Width - 220
+                            Height: =28
+                            Align: =Align.Left
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Size: =14
+
+                        lblTaskProject As label:
+                            Text: =ThisItem.ProjectName
+                            X: =52
+                            Y: =44
+                            Width: =Parent.Width - 220
+                            Height: =24
+                            Align: =Align.Left
+                            Color: =ColorValue("#6B7280")
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        lblTaskDueDate As label:
+                            Text: ="Due " & Text(ThisItem.DueDate, "mmm dd")
+                            X: =Parent.Width - 180
+                            Y: =16
+                            Width: =90
+                            Height: =24
+                            Align: =Align.Right
+                            Color: =If(ThisItem.DueDate < Today() && ThisItem.Status <> "Completed", ColorValue("#C50F1F"), varPalette.Text)
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =If(ThisItem.DueDate < Today() && ThisItem.Status <> "Completed", FontWeight.Semibold, FontWeight.Normal)
+                            Size: =12
+
+                        lblTaskPriority As label:
+                            Text: =ThisItem.Priority
+                            X: =Parent.Width - 88
+                            Y: =44
+                            Width: =72
+                            Height: =28
+                            Align: =Align.Center
+                            BorderRadius: =20
+                            Fill: =Switch(ThisItem.Priority, "High", ColorValue("#C50F1F"), "Medium", ColorValue("#FFB900"), "Low", ColorValue("#E1E7EF"))
+                            Color: =If(ThisItem.Priority = "Low", varPalette.Text, RGBA(255, 255, 255, 1))
+                            Font: =Font.'Segoe UI'
+                            FontWeight: =FontWeight.Semibold
+                            Size: =11
+
+            TaskFormPane As groupContainer.verticalAutoLayoutContainer:
+                FillPortions: =1
+                Fill: =RGBA(255, 255, 255, 1)
+                LayoutMode: =LayoutMode.Auto
+                LayoutGap: =12
+                PaddingLeft: =20
+                PaddingRight: =20
+                PaddingTop: =20
+                PaddingBottom: =20
+
+                FormHeader As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    lblTaskFormTitle As label:
+                        Text: =If(locTaskMode = "New", "Create Task", If(locTaskMode = "Edit", "Edit Task", "Details"))
+                        Align: =Align.Left
+                        Color: =varPalette.Text
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Size: =20
+                        Width: =200
+
+                    ModePill As label:
+                        Text: =locTaskMode
+                        Align: =Align.Center
+                        BorderRadius: =12
+                        Color: =varPalette.Primary
+                        Fill: =ColorValue("#E0ECFF")
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =100
+
+                TaskFormFields As groupContainer.verticalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =8
+
+                    TaskRow1 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        TaskField_Name As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width
+
+                            lblTaskNameField As label:
+                                Text: ="Task Name"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiTaskName As text:
+                                Default: =Coalesce(locTaskRecord.TaskName, "")
+                                DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: ="e.g., Review requirements"
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                    TaskRow2 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        TaskField_Project As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblProjectField As label:
+                                Text: ="Project"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            ddTaskProject As dropdown:
+                                Default: =Coalesce(locTaskRecord.ProjectName, "")
+                                DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Items: =Sort(Distinct(colProjects, ProjectName), Result, Ascending)
+                                Value: ="Result"
+                                AllowEmptySelection: =true
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                        TaskField_Owner As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblOwnerField As label:
+                                Text: ="Assigned To"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            tiTaskOwner As text:
+                                Default: =Coalesce(locTaskRecord.Owner, varUser.FullName)
+                                DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                HintText: =varUser.FullName
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                PaddingLeft: =10
+                                Size: =13
+
+                    TaskRow3 As groupContainer.horizontalAutoLayoutContainer:
+                        LayoutMode: =LayoutMode.Auto
+                        LayoutGap: =12
+
+                        TaskField_Status As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblStatusField As label:
+                                Text: ="Status"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            ddTaskStatusField As dropdown:
+                                Default: =Coalesce(locTaskRecord.Status, "Open")
+                                DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Items: =["Open", "In Progress", "On Hold", "Completed"]
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                        TaskField_Priority As groupContainer.manualLayoutContainer:
+                            Height: =88
+                            Width: =Parent.Width / 2 - 6
+
+                            lblPriorityField As label:
+                                Text: ="Priority"
+                                Width: =Parent.Width
+                                Height: =24
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =12
+
+                            ddTaskPriorityField As dropdown:
+                                Default: =Coalesce(locTaskRecord.Priority, "Medium")
+                                DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                                Items: =["High", "Medium", "Low"]
+                                X: =0
+                                Y: =32
+                                Width: =Parent.Width
+                                Height: =48
+                                BorderColor: =varPalette.Border
+                                Color: =varPalette.Text
+                                Font: =Font.'Segoe UI'
+                                Size: =13
+
+                    TaskField_DueDate As groupContainer.manualLayoutContainer:
+                        Height: =88
+                        Width: =Parent.Width
+
+                        lblDueDateField As label:
+                            Text: ="Due Date"
+                            Width: =Parent.Width
+                            Height: =24
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        dpTaskDueDate As datePicker:
+                            DefaultDate: =Coalesce(locTaskRecord.DueDate, Today())
+                            DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                            X: =0
+                            Y: =32
+                            Width: =Parent.Width
+                            Height: =48
+                            BorderColor: =varPalette.Border
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =13
+
+                    TaskField_Notes As groupContainer.manualLayoutContainer:
+                        Height: =180
+                        Width: =Parent.Width
+
+                        lblNotesField As label:
+                            Text: ="Notes"
+                            Width: =Parent.Width
+                            Height: =24
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            Size: =12
+
+                        tiTaskNotes As text:
+                            Default: =Coalesce(locTaskRecord.Notes, "")
+                            DisplayMode: =If(locTaskMode = "View", DisplayMode.View, DisplayMode.Edit)
+                            Mode: =TextMode.MultiLine
+                            X: =0
+                            Y: =32
+                            Width: =Parent.Width
+                            Height: =136
+                            BorderColor: =varPalette.Border
+                            Color: =varPalette.Text
+                            Font: =Font.'Segoe UI'
+                            PaddingLeft: =10
+                            Size: =13
+
+                TaskActionRow As groupContainer.horizontalAutoLayoutContainer:
+                    LayoutMode: =LayoutMode.Auto
+                    LayoutGap: =12
+
+                    btnSaveTask As button:
+                        Text: ="Save"
+                        Fill: =varPalette.Primary
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =140
+                        Height: =44
+                        DisplayMode: =If(locTaskMode = "View", DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(locTaskMode <> "View", With({recordToSave: {ID: Coalesce(locTaskRecord.ID, GUID()), TaskName: Trim(tiTaskName.Text), ProjectName: Coalesce(ddTaskProject.Selected.Result, ddTaskProject.Selected.Value, locTaskRecord.ProjectName, ""), Owner: Trim(tiTaskOwner.Text), Status: Coalesce(ddTaskStatusField.Selected.Value, "Open"), DueDate: dpTaskDueDate.SelectedDate, Priority: Coalesce(ddTaskPriorityField.Selected.Value, "Medium"), Notes: tiTaskNotes.Text}}, If(locTaskMode = "Edit" || !IsBlank(LookUp(colTasks, ID = recordToSave.ID)), Patch(colTasks, LookUp(colTasks, ID = recordToSave.ID), recordToSave), Collect(colTasks, recordToSave)); UpdateContext({locTaskMode: "View", locTaskRecord: recordToSave})))
+
+                    btnCancelTask As button:
+                        Text: ="Cancel"
+                        Fill: =ColorValue("#F3F4F6")
+                        Color: =varPalette.Text
+                        Width: =140
+                        Height: =44
+                        OnSelect: =UpdateContext({locTaskMode: "View", locTaskRecord: If(IsBlank(galTasks.Selected), locTaskRecord, galTasks.Selected)})
+
+                    btnCompleteTask As button:
+                        Text: ="Mark Complete"
+                        Fill: =varPalette.Accent
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =160
+                        Height: =44
+                        DisplayMode: =If(IsBlank(locTaskRecord) || locTaskRecord.Status = "Completed", DisplayMode.Disabled, DisplayMode.Edit)
+                        OnSelect: =If(!IsBlank(locTaskRecord), With({completedRecord: Patch(colTasks, LookUp(colTasks, ID = locTaskRecord.ID), {Status: "Completed"})}, UpdateContext({locTaskRecord: completedRecord, locTaskMode: "View"})))
+

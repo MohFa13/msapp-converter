@@ -1,0 +1,26 @@
+{
+  "CurrentTheme": "ProjectManagerCorporate",
+  "Themes": [
+    {
+      "Name": "ProjectManagerCorporate",
+      "Fonts": {
+        "Heading": "Segoe UI",
+        "Body": "Segoe UI",
+        "Accent": "Segoe UI Semibold"
+      },
+      "Palette": {
+        "Primary": "#00539B",
+        "Secondary": "#FF8C00",
+        "Accent": "#06A77D",
+        "Background": "#F4F6FB",
+        "Surface": "#FFFFFF",
+        "Border": "#E1E7EF",
+        "Text": "#1B1F33",
+        "MutedText": "#6B7280",
+        "Success": "#107C10",
+        "Warning": "#FFB900",
+        "Danger": "#C50F1F"
+      }
+    }
+  ]
+}

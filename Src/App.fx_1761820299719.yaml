@@ -1,5 +1,220 @@
 App As appinfo:
     BackEnabled: =true
+    OnStart: |
+        =Set(varUser, User());
+        Set(varActiveSection, "Dashboard");
+        Set(
+            varPalette,
+            {
+                Primary: ColorValue("#00539B"),
+                Secondary: ColorValue("#FF8C00"),
+                Accent: ColorValue("#06A77D"),
+                Neutral: ColorValue("#F6F8FB"),
+                Text: ColorValue("#1B1F33"),
+                Border: ColorValue("#E1E7EF"),
+                Background: ColorValue("#F4F6FB")
+            }
+        );
+        ClearCollect(
+            colStatusOptions,
+            {Value: "Open", Color: ColorValue("#FFB800")},
+            {Value: "In Progress", Color: ColorValue("#0078D4")},
+            {Value: "On Hold", Color: ColorValue("#5C2D91")},
+            {Value: "Completed", Color: ColorValue("#107C10")},
+            {Value: "Cancelled", Color: ColorValue("#C50F1F")}
+        );
+        ClearCollect(
+            colRFPs,
+            {
+                ID: GUID(),
+                Title: "ERP Modernization Program",
+                Client: "Northwind Traders",
+                Owner: "Adele Vance",
+                Status: "In Progress",
+                DueDate: DateAdd(Today(), 21),
+                Budget: 275000,
+                Summary: "Complete modernization of ERP and finance stack."
+            },
+            {
+                ID: GUID(),
+                Title: "Customer Insights Platform",
+                Client: "Contoso Retail",
+                Owner: "Allan Deyoung",
+                Status: "Open",
+                DueDate: DateAdd(Today(), 35),
+                Budget: 180000,
+                Summary: "Deploy analytics platform for unified customer view."
+            },
+            {
+                ID: GUID(),
+                Title: "Facilities Outsourcing RFP",
+                Client: "Fabrikam Facilities",
+                Owner: "Debra Berger",
+                Status: "On Hold",
+                DueDate: DateAdd(Today(), 50),
+                Budget: 320000,
+                Summary: "Long-term facilities and workplace outsourcing initiative."
+            },
+            {
+                ID: GUID(),
+                Title: "Strategic Workforce Planning",
+                Client: "Woodgrove Bank",
+                Owner: "Megan Bowen",
+                Status: "Completed",
+                DueDate: DateAdd(Today(), -5),
+                Budget: 95000,
+                Summary: "Consulting engagement for next-generation workforce strategy."
+            },
+            {
+                ID: GUID(),
+                Title: "Sustainability Reporting Platform",
+                Client: "Fourth Coffee",
+                Owner: "Isaiah Langer",
+                Status: "Open",
+                DueDate: DateAdd(Today(), 60),
+                Budget: 210000,
+                Summary: "Cloud platform consolidating ESG data sources."
+            }
+        );
+        ClearCollect(
+            colProjects,
+            {
+                ID: GUID(),
+                ProjectName: "ERP Modernization Program",
+                Client: "Northwind Traders",
+                Owner: "Adele Vance",
+                Status: "Execution",
+                StartDate: DateAdd(Today(), -45),
+                EndDate: DateAdd(Today(), 120),
+                Budget: 275000,
+                TeamMembers: "Adele Vance, Diego Siciliani, Patty Fernandez",
+                Progress: 38,
+                Summary: "Wave 1 focusing on finance and procurement capabilities."
+            },
+            {
+                ID: GUID(),
+                ProjectName: "Customer Insights Platform",
+                Client: "Contoso Retail",
+                Owner: "Allan Deyoung",
+                Status: "Discovery",
+                StartDate: DateAdd(Today(), -15),
+                EndDate: DateAdd(Today(), 180),
+                Budget: 180000,
+                TeamMembers: "Allan Deyoung, Lydia Bauer, Nestor Wilke",
+                Progress: 22,
+                Summary: "Standing up Azure Synapse and Power BI semantic models."
+            },
+            {
+                ID: GUID(),
+                ProjectName: "Workplace Experience Refresh",
+                Client: "Fabrikam Facilities",
+                Owner: "Debra Berger",
+                Status: "Planning",
+                StartDate: DateAdd(Today(), 5),
+                EndDate: DateAdd(Today(), 210),
+                Budget: 320000,
+                TeamMembers: "Debra Berger, Lee Gu, Kat Larsson",
+                Progress: 10,
+                Summary: "Future-focused workplace modernization with IoT sensors."
+            },
+            {
+                ID: GUID(),
+                ProjectName: "Sustainability Reporting Platform",
+                Client: "Fourth Coffee",
+                Owner: "Isaiah Langer",
+                Status: "Execution",
+                StartDate: DateAdd(Today(), -5),
+                EndDate: DateAdd(Today(), 150),
+                Budget: 210000,
+                TeamMembers: "Isaiah Langer, Joni Sherman, Miriam Graham",
+                Progress: 44,
+                Summary: "Unified ESG data hub and reporting automation."
+            },
+            {
+                ID: GUID(),
+                ProjectName: "Strategic Workforce Planning",
+                Client: "Woodgrove Bank",
+                Owner: "Megan Bowen",
+                Status: "Closed",
+                StartDate: DateAdd(Today(), -120),
+                EndDate: DateAdd(Today(), -7),
+                Budget: 95000,
+                TeamMembers: "Megan Bowen, Alex Wilber",
+                Progress: 100,
+                Summary: "Delivery completed with analytics hand-off to HR leadership."
+            }
+        );
+        ClearCollect(
+            colTasks,
+            {
+                ID: GUID(),
+                TaskName: "Finalize finance data migration scope",
+                ProjectName: "ERP Modernization Program",
+                Owner: varUser.FullName,
+                Status: "In Progress",
+                DueDate: DateAdd(Today(), 3),
+                Priority: "High",
+                Notes: "Align with architecture board before locking the scope."
+            },
+            {
+                ID: GUID(),
+                TaskName: "Compile customer journey map",
+                ProjectName: "Customer Insights Platform",
+                Owner: varUser.FullName,
+                Status: "Open",
+                DueDate: DateAdd(Today(), 5),
+                Priority: "Medium",
+                Notes: "Need marketing input for personalization scenarios."
+            },
+            {
+                ID: GUID(),
+                TaskName: "Facilities partner shortlist",
+                ProjectName: "Workplace Experience Refresh",
+                Owner: varUser.FullName,
+                Status: "Open",
+                DueDate: DateAdd(Today(), 9),
+                Priority: "High",
+                Notes: "Shortlist to three vendors with ESG credentials."
+            },
+            {
+                ID: GUID(),
+                TaskName: "Draft ESG KPI catalogue",
+                ProjectName: "Sustainability Reporting Platform",
+                Owner: "Isaiah Langer",
+                Status: "In Progress",
+                DueDate: DateAdd(Today(), 12),
+                Priority: "High",
+                Notes: "Align with regulatory reporting obligations."
+            },
+            {
+                ID: GUID(),
+                TaskName: "Transition workshop with HR",
+                ProjectName: "Strategic Workforce Planning",
+                Owner: "Megan Bowen",
+                Status: "Completed",
+                DueDate: DateAdd(Today(), -2),
+                Priority: "Medium",
+                Notes: "Documented lessons learned and backlog."
+            },
+            {
+                ID: GUID(),
+                TaskName: "Executive status deck",
+                ProjectName: "ERP Modernization Program",
+                Owner: "Diego Siciliani",
+                Status: "On Hold",
+                DueDate: DateAdd(Today(), 2),
+                Priority: "Low",
+                Notes: "Waiting for finance actuals before finalizing narrative."
+            }
+        );
+        Set(
+            varUserInitials,
+            With(
+                {parts: Split(varUser.FullName, " ")},
+                Concatenate(Left(First(parts).Result, 1), Left(Last(parts).Result, 1))
+            )
+        );
+    StartScreen: =Screen1
     Theme: =PowerAppsTheme
 
     Host As hostControl.DefaultHostControlVariant:
